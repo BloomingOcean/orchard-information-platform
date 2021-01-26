@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liyang.orchard.dao.ReportMapper">
+  <resultMap id="BaseResultMap" type="com.liyang.orchard.model.Report">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="report_id" jdbcType="INTEGER" property="reportId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="info_id" jdbcType="INTEGER" property="infoId" />
+    <result column="report_content" jdbcType="VARCHAR" property="reportContent" />
+    <result column="report_date" jdbcType="TIMESTAMP" property="reportDate" />
+  </resultMap>
+</mapper>

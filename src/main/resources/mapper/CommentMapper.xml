@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liyang.orchard.dao.CommentMapper">
+  <resultMap id="BaseResultMap" type="com.liyang.orchard.model.Comment">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="com_id" jdbcType="INTEGER" property="comId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="info_id" jdbcType="INTEGER" property="infoId" />
+    <result column="owner_house_id" jdbcType="INTEGER" property="ownerHouseId" />
+    <result column="comment" jdbcType="VARCHAR" property="comment" />
+    <result column="com_date" jdbcType="TIMESTAMP" property="comDate" />
+  </resultMap>
+</mapper>

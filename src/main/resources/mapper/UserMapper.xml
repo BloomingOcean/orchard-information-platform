@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liyang.orchard.dao.UserMapper">
+  <resultMap id="BaseResultMap" type="com.liyang.orchard.model.User">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="portrait_url" jdbcType="VARCHAR" property="portraitUrl" />
+    <result column="nikename" jdbcType="VARCHAR" property="nikename" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="id_number" jdbcType="VARCHAR" property="idNumber" />
+    <result column="verified" jdbcType="VARCHAR" property="verified" />
+    <result column="membership_deadline" jdbcType="TIMESTAMP" property="membershipDeadline" />
+  </resultMap>
+</mapper>

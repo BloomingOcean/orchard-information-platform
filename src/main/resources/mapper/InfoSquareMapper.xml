@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liyang.orchard.dao.InfoSquareMapper">
+  <resultMap id="BaseResultMap" type="com.liyang.orchard.model.InfoSquare">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="info_id" jdbcType="INTEGER" property="infoId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
+    <result column="video_source" jdbcType="VARCHAR" property="videoSource" />
+    <result column="buy_weight" jdbcType="VARCHAR" property="buyWeight" />
+    <result column="recruit_num" jdbcType="VARCHAR" property="recruitNum" />
+    <result column="info_type_id" jdbcType="INTEGER" property="infoTypeId" />
+    <result column="release_date" jdbcType="TIMESTAMP" property="releaseDate" />
+  </resultMap>
+</mapper>
