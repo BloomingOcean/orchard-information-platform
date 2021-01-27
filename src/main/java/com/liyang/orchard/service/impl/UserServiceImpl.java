@@ -19,4 +19,13 @@ public class UserServiceImpl extends AbstractService<User> implements UserServic
     @Resource
     private UserMapper userMapper;
 
+    /***
+     * 通过手机号查找账户
+     * @param phone 电话
+     * @return 查找到的用户
+     */
+    public User findByPhone(String phone) {
+        return userMapper.findByPhone(phone);
+    }
+
 }

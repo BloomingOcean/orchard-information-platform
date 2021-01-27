@@ -17,7 +17,7 @@ import java.util.List;
 * Created by Liyang on 2021/01/25.
 */
 @RestController
-@RequestMapping("/owner_house")
+@RequestMapping("/ownerHouse")
 @CrossOrigin
 @Api(tags = "园主之家")
 public class OwnerHouseController {

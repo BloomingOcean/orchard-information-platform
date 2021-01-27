@@ -17,7 +17,7 @@ import java.util.List;
 * Created by Liyang on 2021/01/25.
 */
 @RestController
-@RequestMapping("/browse_records")
+@RequestMapping("/browseRecords")
 @CrossOrigin
 @Api(tags = "浏览记录")
 public class BrowseRecordsController {

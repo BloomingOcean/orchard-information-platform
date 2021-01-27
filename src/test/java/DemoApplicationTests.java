@@ -26,7 +26,7 @@ public class DemoApplicationTests {
         Swagger2MarkupConverter.from(new URL("http://localhost:7489/v2/api-docs?group=ORCHARDAPI"))
                 .withConfig(config)
                 .build()
-                .toFolder(Paths.get("src/docs/markdown/generated"));
+                .toFolder(Paths.get("src/docs"));
     }
 
 }

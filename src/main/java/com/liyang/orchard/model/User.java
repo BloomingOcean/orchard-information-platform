@@ -46,4 +46,12 @@ public class User {
     @Column(name = "membership_deadline")
     private Date membershipDeadline;
 
+    @ApiModelProperty(value = "电话号码")
+    @Column(name = "phone")
+    private String phone;
+
+    @ApiModelProperty(value = "密码")
+    @Column(name = "password")
+    private String password;
+
 }

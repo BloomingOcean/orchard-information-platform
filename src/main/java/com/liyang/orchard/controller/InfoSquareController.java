@@ -17,7 +17,7 @@ import java.util.List;
 * Created by Liyang on 2021/01/25.
 */
 @RestController
-@RequestMapping("/info_square")
+@RequestMapping("/infoSquare")
 @CrossOrigin
 @Api(tags = "信息广场")
 public class InfoSquareController {

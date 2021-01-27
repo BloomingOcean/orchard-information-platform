@@ -12,5 +12,7 @@
     <result column="id_number" jdbcType="VARCHAR" property="idNumber" />
     <result column="verified" jdbcType="VARCHAR" property="verified" />
     <result column="membership_deadline" jdbcType="TIMESTAMP" property="membershipDeadline" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
   </resultMap>
 </mapper>
