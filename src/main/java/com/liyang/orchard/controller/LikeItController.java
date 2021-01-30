@@ -1,8 +1,8 @@
 package com.liyang.orchard.controller;
 import com.liyang.orchard.core.Result;
 import com.liyang.orchard.core.ResultGenerator;
-import com.liyang.orchard.model.Like;
-import com.liyang.orchard.service.LikeService;
+import com.liyang.orchard.model.LikeIt;
+import com.liyang.orchard.service.LikeItService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
@@ -14,49 +14,49 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
-* Created by Liyang on 2021/01/25.
+* Created by Liyang on 2021/01/30.
 */
 @RestController
-@RequestMapping("/like")
+@RequestMapping("/likeIt")
 @CrossOrigin
 @Api(tags = "点赞")
-public class LikeController {
+public class LikeItController {
     @Resource
-    private LikeService likeService;
+    private LikeItService likeItService;
 
     @ApiOperation(value = "添加-点赞")
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public Result add(@RequestBody Like like) {
-        likeService.save(like);
+    public Result add(@RequestBody LikeIt likeIt) {
+        likeItService.save(likeIt);
         return ResultGenerator.genSuccessResult();
     }
 
     @ApiOperation(value = "根据id删除-点赞")
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
     public Result delete(@ApiParam("") @RequestParam Integer id) {
-        likeService.deleteById(id);
+        likeItService.deleteById(id);
         return ResultGenerator.genSuccessResult();
     }
 
     @ApiOperation(value = "根据id更新-点赞")
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
-    public Result update(@RequestBody Like like) {
-        likeService.update(like);
+    public Result update(@RequestBody LikeIt likeIt) {
+        likeItService.update(likeIt);
         return ResultGenerator.genSuccessResult();
     }
 
     @ApiOperation(value = "根据id查询-点赞")
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
     public Result detail(@ApiParam("") @RequestParam Integer id) {
-        Like like = likeService.findById(id);
-        return ResultGenerator.genSuccessResult(like);
+        LikeIt likeIt = likeItService.findById(id);
+        return ResultGenerator.genSuccessResult(likeIt);
     }
 
     @ApiOperation(value = "分页查询")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public Result list(@ApiParam("页数") @RequestParam(defaultValue = "0") Integer page, @ApiParam("每页展示数量")  @RequestParam(defaultValue = "0") Integer size) {
         PageHelper.startPage(page, size);
-        List<Like> list = likeService.findAll();
+        List<LikeIt> list = likeItService.findAll();
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }

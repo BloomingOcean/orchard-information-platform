@@ -40,27 +40,6 @@ public class VerifyCharCodeGenImpl implements VerifyCodeGen {
         }
     }
     /**
-     * 生成随机字符
-     *
-     * @param width 宽
-     * @param height 高
-     * @param os 流
-     * @return randomStr
-     * @throws IOException IOE
-     */
-    @Override
-    public String generate(int width, int height, OutputStream os) throws IOException {
-        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        Graphics graphics = image.getGraphics();
-        fillBackground(graphics, width, height);
-        String randomStr = RandomUtils.randomString(VALICATE_CODE_LENGTH);
-        createCharacter(graphics, randomStr);
-        graphics.dispose();
-        //设置JPEG格式
-        ImageIO.write(image, "JPEG", os);
-        return randomStr;
-    }
-    /**
      * 验证码生成
      *
      * @param width 宽
@@ -86,6 +65,30 @@ public class VerifyCharCodeGenImpl implements VerifyCodeGen {
         return verifyCode;
     }
     /**
+     * 生成随机字符
+     *
+     * @param width 宽
+     * @param height 高
+     * @param os 流
+     * @return randomStr
+     * @throws IOException IOE
+     */
+    @Override
+    public String generate(int width, int height, OutputStream os) throws IOException {
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        Graphics graphics = image.getGraphics();
+        // 生成随机颜色画板
+        fillBackground(graphics, width, height);
+        // 生成随机字符串
+        String randomStr = RandomUtils.randomString(VALICATE_CODE_LENGTH);
+        createCharacter(graphics, randomStr);
+        // 释放绘板 (此时图片流已保存在image中)
+        graphics.dispose();
+        //设置JPEG格式
+        ImageIO.write(image, "JPEG", os);
+        return randomStr;
+    }
+    /**
      * 设置字符颜色大小
      *
      * @param g 绘图
@@ -100,7 +103,7 @@ public class VerifyCharCodeGenImpl implements VerifyCodeGen {
                     + random.nextInt(100), 50 + random.nextInt(100)));
             //设置字体大小，类型
             g.setFont(new Font(FONT_TYPES[random.nextInt(FONT_TYPES.length)], Font.BOLD, 26));
-            //设置x y 坐标
+            //设置x y 坐标  (并未旋转)
             g.drawString(String.valueOf(charArray[i]), 15 * i + 5, 19 + random.nextInt(8));
         }
     }

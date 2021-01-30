@@ -12,13 +12,13 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ApiModel(value = "点赞")
-@Table(name = "like")
-public class Like {
+@Table(name = "like_it")
+public class LikeIt {
 
     @Id
     @ApiModelProperty(value = "点赞ID")
-    @Column(name = "like_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "like_id")
     private Integer likeId;
 
     @ApiModelProperty(value = "园主之家ID")

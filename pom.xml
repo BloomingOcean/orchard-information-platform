@@ -8,7 +8,7 @@
     <artifactId>orchard-information-platform</artifactId>
     <version>1.0</version>
     <name>orchard-information-platform</name>
-    <description>果园信息发布平台</description>
+    <description>An online information publishing platform for fruit and vegetable products</description>
     <packaging>jar</packaging>
 
     <!--编码设置-->
@@ -189,6 +189,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
     </dependencies>
 
     <build>

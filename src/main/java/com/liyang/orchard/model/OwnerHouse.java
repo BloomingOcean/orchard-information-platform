@@ -18,8 +18,8 @@ public class OwnerHouse {
 
     @Id
     @ApiModelProperty(value = "园主之家ID")
-    @Column(name = "owner_house_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "owner_house_id")
     private Integer ownerHouseId;
 
     @ApiModelProperty(value = "用户ID")
@@ -38,9 +38,9 @@ public class OwnerHouse {
     @Column(name = "video_source")
     private String videoSource;
 
-    @ApiModelProperty(value = "点赞")
-    @Column(name = "like")
-    private String like;
+    @ApiModelProperty(value = "点赞数量")
+    @Column(name = "like_it")
+    private Integer likeIt;
 
     @ApiModelProperty(value = "发布日期")
     @Column(name = "date")
