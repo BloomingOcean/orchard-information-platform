@@ -1,4 +1,4 @@
-package com.liyang.orchard.configurer;
+package com.liyang.orchard.config;
 
 public class JdbcConfig {
 

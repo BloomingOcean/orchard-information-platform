@@ -1,4 +1,4 @@
-package com.liyang.orchard.configurer;
+package com.liyang.orchard.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
