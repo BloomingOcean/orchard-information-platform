@@ -1,7 +1,7 @@
 package com.liyang.orchard.config.shiro;
 
 import com.alibaba.fastjson.JSONObject;
-import com.heeexy.example.util.constants.ErrorEnum;
+import com.liyang.orchard.core.constants.ErrorEnum;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;

@@ -8,7 +8,7 @@ public class MD5Utils {
     }
 
     // 固定盐值
-    private static final String salt = "1a2b3c4d";
+    private static final String salt = "e52d78a4a598edd6";
 
     public static String inputPassToFormPass(String inputPass) {
         String str = "" + salt.charAt(0) + salt.charAt(2) + inputPass + salt.charAt(5) + salt.charAt(4);
