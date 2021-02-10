@@ -1,4 +1,4 @@
-package com.liyang.orchard.configurer;
+package com.liyang.orchard.config;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -31,10 +31,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 /**
@@ -46,6 +43,16 @@ public class WebMvcConfigurer extends WebMvcConfigurerAdapter {
     private final Logger logger = LoggerFactory.getLogger(WebMvcConfigurer.class);
     @Value("${spring.profiles.active}")
     private String env;//当前激活的配置文件
+
+    /**
+     * 定义默认的请求处理器
+     * 处理 No mapping found for HTTP request with URI in DispatcherServlet...问题
+     *	<mvc:default-servlet-handler />
+     * @param condiConfigurer
+     */
+    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer condiConfigurer) {
+        condiConfigurer.enable();
+    }
 
     /**
      * springBoot自动配置本身并不会把/swagger-ui.html这个路径映射到对应的目录META-INF/resources/下面。
@@ -145,6 +152,11 @@ public class WebMvcConfigurer extends WebMvcConfigurerAdapter {
         }
     }
 
+    /**
+     * 把结果转换为Jso存储于response
+     * @param response 响应结果
+     * @param result 结果数据
+     */
     private void responseResult(HttpServletResponse response, Result result) {
         response.setCharacterEncoding("UTF-8");
         response.setHeader("Content-type", "application/json;charset=UTF-8");
@@ -184,6 +196,11 @@ public class WebMvcConfigurer extends WebMvcConfigurerAdapter {
         return StringUtils.equals(sign, requestSign);//比较
     }
 
+    /**
+     * 获取请求IP
+     * @param request request
+     * @return IP
+     */
     private String getIpAddress(HttpServletRequest request) {
         String ip = request.getHeader("x-forwarded-for");
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {

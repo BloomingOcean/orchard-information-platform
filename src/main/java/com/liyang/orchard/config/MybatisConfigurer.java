@@ -1,4 +1,4 @@
-package com.liyang.orchard.configurer;
+package com.liyang.orchard.config;
 
 import com.github.pagehelper.PageHelper;
 import org.apache.ibatis.plugin.Interceptor;

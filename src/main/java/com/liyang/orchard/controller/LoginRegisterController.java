@@ -11,6 +11,10 @@ import com.liyang.orchard.utils.verify.VerifyCode;
 import com.liyang.orchard.utils.verify.VerifyCodeGen;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -56,25 +60,37 @@ public class LoginRegisterController {
     @ApiOperation(value = "登录")
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public Result login(@RequestParam("phone") String phone, @RequestParam("password") String password){
-        // 调用MD5工具类进行加密
-        String inputEncryptionPassword=MD5Utils.inputPassToFormPass(password);
-        // 调用自己编写的根据用户名查询方法
-        User user=userService.findByPhone(phone);
-        // 进行逻辑判断数据库是否有这个用户
-        if(user==null){
-            // 没有此用户,返回错误信息
-            return ResultGenerator.genFailResult("您未注册账号,请先注册");
-        }
-        // 如果不为空,根据用户对象获取数据的密码
-        String dbEncryptionPassword=user.getPassword();
-        // 将数据的密码和前端传进来的密码进行匹配
-        if(dbEncryptionPassword.equals(inputEncryptionPassword)) {
-            //匹配成功输入SUCCESS
+//        // 调用MD5工具类进行加密
+//        String inputEncryptionPassword=MD5Utils.inputPassToFormPass(password);
+//        // 调用自己编写的根据用户名查询方法
+//        User user=userService.findByPhone(phone);
+//        // 进行逻辑判断数据库是否有这个用户
+//        if(user==null){
+//            // 没有此用户,返回错误信息
+//            return ResultGenerator.genFailResult("您未注册账号,请先注册");
+//        }
+//        // 如果不为空,根据用户对象获取数据的密码
+//        String dbEncryptionPassword=user.getPassword();
+//        // 将数据的密码和前端传进来的密码进行匹配
+//        if(dbEncryptionPassword.equals(inputEncryptionPassword)) {
+//            //匹配成功输入SUCCESS
+//            return ResultGenerator.genSuccessResult();
+//        }
+//        else {
+//            // 匹配失败输出错误信息
+//            return ResultGenerator.genFailResult("密码或账户输入错误,请重新输入");
+//        }
+
+        // 获取Subject对象
+        Subject currentUser = SecurityUtils.getSubject();
+        // 生成token
+        UsernamePasswordToken token = new UsernamePasswordToken(phone, password);
+        try {
+            // shiro进行登录操作
+            currentUser.login(token);
             return ResultGenerator.genSuccessResult();
-        }
-        else {
-            // 匹配失败输出错误信息
-            return ResultGenerator.genFailResult("密码或账户输入错误,请重新输入");
+        } catch (AuthenticationException e) {
+            return ResultGenerator.genFailResult("登录失败");
         }
     }
 
