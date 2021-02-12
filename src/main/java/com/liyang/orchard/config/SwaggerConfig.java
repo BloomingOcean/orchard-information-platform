@@ -1,4 +1,4 @@
-package com.liyang.orchard.configurer;
+package com.liyang.orchard.config;
 
 import com.google.common.base.Predicates;
 import org.springframework.beans.factory.annotation.Value;

@@ -39,11 +39,27 @@ public class ShiroConfiguration {
 		Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
          /* 过滤链定义，从上向下顺序执行，一般将 / ** 放在最为下边:这是一个坑呢，一不小心代码就不好使了;
           authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问 */
+		// 放行登录、退出、静态资源、错误页面的请求
 		filterChainDefinitionMap.put("/", "anon");
 		filterChainDefinitionMap.put("/static/**", "anon");
 		filterChainDefinitionMap.put("/login/auth", "anon");
 		filterChainDefinitionMap.put("/login/logout", "anon");
 		filterChainDefinitionMap.put("/error", "anon");
+		// 放行swagger2API页面请求
+		filterChainDefinitionMap.put("/swagger-ui.html", "anon");
+		filterChainDefinitionMap.put("/swagger-resources/**", "anon");
+//		filterChainDefinitionMap.put("/configuration/security", "anon");
+//		filterChainDefinitionMap.put("/configuration/ui", "anon");
+		filterChainDefinitionMap.put("/v2/api-docs", "anon");
+		filterChainDefinitionMap.put("/csrf", "anon");
+		filterChainDefinitionMap.put("/webjars/springfox-swagger-ui/**", "anon");
+
+		// 1、普通用户只要登录了就可以使用大部分功能（不需要单独添加放行）
+		// 2、VIP用户可以看园主之家、用户电话号码（需要单独对这两个请求的url添加权限判断）
+		// 注：用户电话号码可以在展示的请求service中（infoSquare）做业务处理（判断权限然后修改phone的值）
+
+
+		// 除了上述url是可以放行之外,其余请求路径都必须验证
 		filterChainDefinitionMap.put("/**", "authc");
 		shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 		return shiroFilterFactoryBean;
