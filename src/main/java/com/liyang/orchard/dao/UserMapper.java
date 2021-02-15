@@ -8,16 +8,22 @@ import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.type.JdbcType;
 
+import javax.persistence.Id;
+
 @org.apache.ibatis.annotations.Mapper
 public interface UserMapper extends Mapper<User> {
 
-//    @Results({
-//            @Result(column="contact_id", property="contactId", jdbcType = JdbcType.INTEGER),
-//            @Result(column="relationship", property="relationship", jdbcType = JdbcType.VARCHAR),
-//            @Result(column="name", property="name", jdbcType = JdbcType.VARCHAR),
-//            @Result(column="phone_number", property="phoneNumber", jdbcType = JdbcType.INTEGER),
-//            @Result(column="stu_id", property="stuId", jdbcType = JdbcType.INTEGER)
-//    })
+    @Results({
+            @Result(column="user_id", property="userId", jdbcType = JdbcType.INTEGER),
+            @Result(column="portrait_url", property="portraitUrl", jdbcType = JdbcType.VARCHAR),
+            @Result(column="nikename", property="nikename", jdbcType = JdbcType.VARCHAR),
+            @Result(column="name", property="name", jdbcType = JdbcType.VARCHAR),
+            @Result(column="id_number", property="idNumber", jdbcType = JdbcType.VARCHAR),
+            @Result(column="verified", property="verified", jdbcType = JdbcType.VARCHAR),
+            @Result(column="membership_deadline", property="membershipDeadline", jdbcType = JdbcType.TIMESTAMP),
+            @Result(column="phone", property="phone", jdbcType = JdbcType.VARCHAR),
+            @Result(column="password", property="password", jdbcType = JdbcType.VARCHAR)
+    })
 
     @Select("SELECT * from user WHERE phone=#{userPhone}")
     User findByPhone(@Param("userPhone")String phone);

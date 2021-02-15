@@ -3,9 +3,12 @@ package com.liyang.orchard.controller;
 import com.liyang.orchard.core.Result;
 import com.liyang.orchard.core.ResultGenerator;
 import com.liyang.orchard.model.User;
+import com.liyang.orchard.model.pojo.LoginUser;
 import com.liyang.orchard.service.SmsService;
 import com.liyang.orchard.service.UserService;
 import com.liyang.orchard.utils.MD5Utils;
+import com.liyang.orchard.utils.RedisUtil;
+import com.liyang.orchard.utils.TokenUtil;
 import com.liyang.orchard.utils.verify.VerifyCharCodeGenImpl;
 import com.liyang.orchard.utils.verify.VerifyCode;
 import com.liyang.orchard.utils.verify.VerifyCodeGen;
@@ -123,10 +126,33 @@ public class LoginRegisterController {
         }
     }
 
-    @ApiOperation(value = "短信验证码登录")
-    @RequestMapping(value = "/sms",method = RequestMethod.GET)
+    @ApiOperation(value = "短信验证码-发送服务")
+    @RequestMapping(value = "/SMS",method = RequestMethod.GET)
     public Result sendSms(@RequestParam(value = "phone")String phone){
-        smsService.sendSms(phone);
-        return ResultGenerator.genSuccessResult();
+        if(smsService.sendSms(phone)){
+            return ResultGenerator.genSuccessResult();
+        }else {
+            return ResultGenerator.genFailResult("短信发送失败");
+        }
+    }
+
+    @ApiOperation(value = "短信验证码-验证服务")
+    @RequestMapping(value = "/SMSCallback",method = RequestMethod.GET)
+    public Result verifiSms(@RequestParam(value = "phone")String phone,@RequestParam(value = "verifiCode") String verifiCode){
+       RedisUtil redisUtil = new RedisUtil();
+       if(redisUtil.get(phone).equals(verifiCode)){
+           User user = userService.findByPhone(phone);
+           // 生成一个token
+           String token = TokenUtil.getToken(user.getUserId(), user.getName());
+           // 生成一个LoginUser
+           LoginUser loginUser = new LoginUser();
+           loginUser.setUserId(user.getUserId());
+           loginUser.setUserPhone(phone);
+           loginUser.setUserNikename(user.getNikename());
+           loginUser.setUserToken(token);
+           return ResultGenerator.genSuccessResult(loginUser);
+       }else {
+           return ResultGenerator.genFailResult();
+       }
     }
 }

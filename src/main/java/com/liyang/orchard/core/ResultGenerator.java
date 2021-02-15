@@ -5,6 +5,7 @@ package com.liyang.orchard.core;
  */
 public class ResultGenerator {
     private static final String DEFAULT_SUCCESS_MESSAGE = "SUCCESS";
+    private static final String DEFAULT_FAIL_MESSAGE = "FAIL";
 
     public static Result genSuccessResult() {
         return new Result()
@@ -23,5 +24,11 @@ public class ResultGenerator {
         return new Result()
                 .setCode(ResultCode.FAIL)
                 .setMessage(message);
+    }
+
+    public static Result genFailResult() {
+        return new Result()
+                .setCode(ResultCode.FAIL)
+                .setMessage(DEFAULT_FAIL_MESSAGE);
     }
 }

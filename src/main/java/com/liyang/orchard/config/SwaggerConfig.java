@@ -4,17 +4,23 @@ import com.google.common.base.Predicates;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Contact;
+import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 @Configuration
 @EnableSwagger2 // 启用 Swagger2
+@Profile({"dev","test","local"})
 public class SwaggerConfig {
 
     @Value("${sys.version}")
@@ -36,6 +42,9 @@ public class SwaggerConfig {
                     //过滤的接口
                     .paths(PathSelectors.regex("/.*"))
                 .build()
+                // 统一加入Authorize/ToKen等公共参数
+                .securitySchemes(securitySchemes())
+                .securityContexts(securityContexts())
                 .apiInfo(studentApiInfo());
     }
 
@@ -55,6 +64,28 @@ public class SwaggerConfig {
                 // 描述
                 .description("果园平台后台系统-系统管理API")
                 .build();
+    }
+
+    private List<ApiKey> securitySchemes() {
+        return new ArrayList(
+                Collections.singleton(new ApiKey("Authorization", "Authorization", "header")));
+    }
+
+    private List<SecurityContext> securityContexts() {
+        return new ArrayList(
+                Collections.singleton(SecurityContext.builder()
+                        .securityReferences(defaultAuth())
+                        .forPaths(PathSelectors.regex("^(?!auth).*$"))
+                        .build())
+        );
+    }
+
+    List<SecurityReference> defaultAuth() {
+        AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
+        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
+        authorizationScopes[0] = authorizationScope;
+        return new ArrayList(
+                Collections.singleton(new SecurityReference("Authorization", authorizationScopes)));
     }
 
 //    /**

@@ -19,7 +19,7 @@ import java.util.Map;
  * @description: shiro配置类
  */
 @Configuration
-public class ShiroConfiguration {
+public class ShiroConfig {
 	/**
 	 * Shiro的Web过滤器Factory 命名:shiroFilter
 	 */

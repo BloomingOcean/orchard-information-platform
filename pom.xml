@@ -11,11 +11,12 @@
     <description>An online information publishing platform for fruit and vegetable products</description>
     <packaging>jar</packaging>
 
-    <!--编码设置-->
+    <!--编码、jdk版本、jackson版本-->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
+        <jackson.version>2.11.4</jackson.version>
     </properties>
 
     <!-- Inherit defaults from Spring Boot -->
@@ -26,7 +27,7 @@
     </parent>
 
     <dependencies>
-        <!--Spring Boot依赖-->
+        <!--spring-boot-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -44,6 +45,17 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <version>2.4.2</version>
+        </dependency>
+        <!--redis.clients-->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>2.9.0</version>
         </dependency>
         <!--调试工具-->
         <dependency>
@@ -93,7 +105,14 @@
             <version>1.0</version>
             <scope>compile</scope>
         </dependency>
-        <!--常用库依赖-->
+        <!--JWT-->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.1</version>
+        </dependency>
+
+        <!--常用库-->
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
@@ -107,6 +126,11 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>23.0</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.5.8</version>
         </dependency>
         <!--MySQL JDBC驱动-->
         <dependency>
