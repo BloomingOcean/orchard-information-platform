@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.OAuthBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.*;
@@ -15,6 +16,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -43,8 +45,9 @@ public class SwaggerConfig {
                     .paths(PathSelectors.regex("/.*"))
                 .build()
                 // 统一加入Authorize/ToKen等公共参数
-                .securitySchemes(securitySchemes())
-                .securityContexts(securityContexts())
+//                .securitySchemes(securitySchemes())
+//                .securitySchemes(Arrays.asList(securityScheme()))
+//                .securityContexts(securityContexts())
                 .apiInfo(studentApiInfo());
     }
 
@@ -66,16 +69,47 @@ public class SwaggerConfig {
                 .build();
     }
 
-    private List<ApiKey> securitySchemes() {
-        return new ArrayList(
-                Collections.singleton(new ApiKey("Authorization", "Authorization", "header")));
+//    private List<ApiKey> securitySchemes() {
+//        return new ArrayList(
+//                Collections.singleton(new ApiKey("Authorization", "Authorization", "header")));
+//    }
+
+    /**
+     * 采用了 OAuthBuilder 来构建，构建时即得配置 token 的获取地址
+     * 好处就是不用通过其他途径获取 access_token，直接在 swagger-ui 页面输入 password 模式的认证参数即可
+     * 非常方便，仅限于 OAuth2 模式
+     * @return SecurityScheme
+     */
+    private SecurityScheme securityScheme() {
+        GrantType grant = new ResourceOwnerPasswordCredentialsGrant("http://localhost:8080/oauth/token");
+        return new OAuthBuilder().name("OAuth2")
+                .grantTypes(Arrays.asList(grant))
+                .scopes(Arrays.asList(scopes()))
+                .build();
     }
 
+    /**
+     * 定义范围
+     * @return AuthorizationScope[]
+     */
+    private AuthorizationScope[] scopes() {
+        return new AuthorizationScope[]{
+                new AuthorizationScope("all", "all scope")
+        };
+    }
+
+
+    /**
+     * 配置有哪些请求需要携带 Token
+     * @return List<SecurityContext>
+     */
     private List<SecurityContext> securityContexts() {
         return new ArrayList(
                 Collections.singleton(SecurityContext.builder()
                         .securityReferences(defaultAuth())
-                        .forPaths(PathSelectors.regex("^(?!auth).*$"))
+//                        .forPaths(PathSelectors.regex("^(?!auth).*$"))
+                        // 配置了所有请求都需要携带Token
+                        .forPaths(PathSelectors.any())
                         .build())
         );
     }

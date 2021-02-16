@@ -1,11 +1,17 @@
 package com.liyang.orchard.config.shiro;
 
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
+import org.apache.shiro.mgt.DefaultSubjectDAO;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.servlet.Cookie;
+import org.apache.shiro.web.servlet.SimpleCookie;
+import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +36,11 @@ public class ShiroConfig {
 		shiroFilterFactoryBean.setSecurityManager(securityManager);
 		Map<String, Filter> filterMap = new LinkedHashMap<>();
 		filterMap.put("authc", new AjaxPermissionsAuthorizationFilter());
+		// 添加自己的过滤器并且取名为jwt
+//		filterMap.put("jwt", new JWTFilter());
 		shiroFilterFactoryBean.setFilters(filterMap);
+		// 未验证重定向地址
+		shiroFilterFactoryBean.setUnauthorizedUrl("/401");
 		/*定义shiro过滤链  Map结构
 		 * Map中key(xml中是指value值)的第一个'/'代表的路径是相对于HttpServletRequest.getContextPath()的值来的
 		 * anon：它对应的过滤器里面是空的,什么都没做,这里.do和.jsp后面的*表示参数,比方说login.jsp?main这种
@@ -42,14 +52,17 @@ public class ShiroConfig {
 		// 放行登录、退出、静态资源、错误页面的请求
 		filterChainDefinitionMap.put("/", "anon");
 		filterChainDefinitionMap.put("/static/**", "anon");
-		filterChainDefinitionMap.put("/login/auth", "anon");
-		filterChainDefinitionMap.put("/login/logout", "anon");
+		filterChainDefinitionMap.put("/login", "anon");
+		filterChainDefinitionMap.put("/logout", "anon");
 		filterChainDefinitionMap.put("/error", "anon");
+		filterChainDefinitionMap.put("/register", "anon");
+		filterChainDefinitionMap.put("/SMSCallback", "anon");
+		filterChainDefinitionMap.put("/SMS", "anon");
 		// 放行swagger2API页面请求
 		filterChainDefinitionMap.put("/swagger-ui.html", "anon");
 		filterChainDefinitionMap.put("/swagger-resources/**", "anon");
-//		filterChainDefinitionMap.put("/configuration/security", "anon");
-//		filterChainDefinitionMap.put("/configuration/ui", "anon");
+		filterChainDefinitionMap.put("/configuration/security", "anon");
+		filterChainDefinitionMap.put("/configuration/ui", "anon");
 		filterChainDefinitionMap.put("/v2/api-docs", "anon");
 		filterChainDefinitionMap.put("/csrf", "anon");
 		filterChainDefinitionMap.put("/webjars/springfox-swagger-ui/**", "anon");
@@ -71,6 +84,16 @@ public class ShiroConfig {
 	@Bean
 	public SecurityManager securityManager() {
 		DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
+		/*
+		 * 关闭shiro自带的session，详情见文档
+		 * http://shiro.apache.org/session-management.html#SessionManagement-StatelessApplications%28Sessionless%29
+		 */
+		DefaultSubjectDAO subjectDAO = new DefaultSubjectDAO();
+		DefaultSessionStorageEvaluator defaultSessionStorageEvaluator = new DefaultSessionStorageEvaluator();
+		defaultSessionStorageEvaluator.setSessionStorageEnabled(false);
+		subjectDAO.setSessionStorageEvaluator(defaultSessionStorageEvaluator);
+		securityManager.setSubjectDAO(subjectDAO);
+		// 使用自定义的realm
 		securityManager.setRealm(userRealm());
 		return securityManager;
 	}
@@ -82,6 +105,63 @@ public class ShiroConfig {
 	public UserRealm userRealm() {
 		UserRealm userRealm = new UserRealm();
 		return userRealm;
+	}
+
+	/**
+	 * shiro session的管理
+	 */
+	@Bean
+	public DefaultWebSessionManager sessionManager() {
+		DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
+		// 会话超时时间，单位：毫秒，默认30分钟(1800000)
+		sessionManager.setGlobalSessionTimeout(1800000);
+		// 定时清理失效会话, 清理用户直接关闭浏览器造成的孤立会话
+		sessionManager.setSessionValidationInterval(1800000);
+		sessionManager.setSessionValidationSchedulerEnabled(true);
+		// 指定sessionid
+		sessionManager.setSessionIdCookie(sessionIdCookie());
+		sessionManager.setSessionIdCookieEnabled(true);
+		sessionManager.getSessionIdCookie().setSecure(false);
+		// 去掉shiro登录时url里的JSESSIONID
+		sessionManager.setSessionIdUrlRewritingEnabled(false);
+		return sessionManager;
+	}
+
+	/**
+	 * 防止放行的静态资源等请求修改存sessionid的cookie
+	 */
+	@Bean
+	public SimpleCookie sessionIdCookie() {
+		SimpleCookie sessionIdCookie = new SimpleCookie("sid");
+		sessionIdCookie.setHttpOnly(true);
+		sessionIdCookie.setMaxAge(-1);
+		return sessionIdCookie;
+	}
+
+	/**
+	 * cookie对象;
+	 * rememberMeCookie()方法是设置Cookie的生成模版，比如cookie的name，cookie的有效时间等等。
+	 */
+	@Bean
+	public SimpleCookie rememberMeCookie(){
+		//这个参数是cookie的名称，对应前端的name = rememberMe
+		SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
+		//<!-- 记住我cookie生效时间 ,单位秒;-->
+		simpleCookie.setMaxAge(Cookie.ONE_YEAR);
+		return simpleCookie;
+	}
+
+	/**
+	 * cookie管理对象;
+	 * rememberMeManager()方法是生成rememberMe管理器，而且要将这个rememberMe管理器设置到securityManager中
+	 */
+	@Bean
+	public CookieRememberMeManager rememberMeManager(){
+		CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
+		cookieRememberMeManager.setCookie(rememberMeCookie());
+		//rememberMe cookie加密的密钥 默认AES算法 密钥长度(128 256 512 位)
+		cookieRememberMeManager.setCipherKey("x5+126q47832#4*k".getBytes());
+		return cookieRememberMeManager;
 	}
 
 	/**

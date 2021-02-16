@@ -56,6 +56,24 @@ public class TokenUtil {
     }
 
     /**
+     * 查看并解析token
+     * 这个方法会在token异常的时候自动抛出异常,不用自定异常,
+     * 只需要在验证的时候进行捕获即可
+     * @param token
+     * @return
+     */
+    public static Claims getTokenBody(String token){
+        //这里得到是token中的载荷部分,也是具体信息的所在
+        Claims claims = Jwts.parser()
+                .setSigningKey(secret)
+                .parseClaimsJws(token).getBody();
+        //对应的是上边的
+        Object uuidkey = claims.get("uuidkey");
+        System.out.println(uuidkey);
+        return claims;
+    }
+
+    /**
      * 获取用户的姓名
      * @param token
      */
@@ -83,24 +101,6 @@ public class TokenUtil {
         String UUIDkey = (String) getTokenBody(token).get(key);
         System.out.println("UUIDkey====" + UUIDkey);
         return UUIDkey;
-    }
-
-    /**
-     * 查看并解析token
-     * 这个方法会在token异常的时候自动抛出异常,不用自定异常,
-     * 只需要在验证的时候进行捕获即可
-     * @param token
-     * @return
-     */
-    public static Claims getTokenBody(String token){
-        //这里得到是token中的载荷部分,也是具体信息的所在
-        Claims claims = Jwts.parser()
-                .setSigningKey(secret)
-                .parseClaimsJws(token).getBody();
-        //对应的是上边的
-        Object uuidkey = claims.get("uuidkey");
-        System.out.println(uuidkey);
-        return claims;
     }
 
     //测试是否可以去到信息

@@ -13,13 +13,15 @@ public class TokenConfig extends WebMvcConfigurerAdapter {
         return new TokenInterceptor();
     }
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(tokenInterceptor())
-                .addPathPatterns("/**")
-                //不拦截login和静态资源
-                .excludePathPatterns("/login","/static/**");
-    }
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        registry.addInterceptor(tokenInterceptor())
+//                .addPathPatterns("/**")
+//                //不拦截的请求路径
+//                .excludePathPatterns("/","/error","/static/**",
+//                        "/swagger-ui.html","/swagger-resources/**","/v2/api-docs","/webjars/springfox-swagger-ui/**","/csrf",
+//                        "/SMSCallback","/SMS","/login","/register");
+//    }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

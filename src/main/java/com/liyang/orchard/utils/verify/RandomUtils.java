@@ -1,4 +1,4 @@
-package com.liyang.orchard.utils;
+package com.liyang.orchard.utils.verify;
 
 import java.awt.*;
 import java.util.Random;
