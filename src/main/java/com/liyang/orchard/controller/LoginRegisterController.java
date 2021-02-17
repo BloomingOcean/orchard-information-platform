@@ -87,14 +87,32 @@ public class LoginRegisterController {
         // 获取Subject对象
         Subject currentUser = SecurityUtils.getSubject();
         // 生成token
-        UsernamePasswordToken token = new UsernamePasswordToken(phone, password);
+        UsernamePasswordToken currentToken = new UsernamePasswordToken(phone, password);
         try {
             // shiro进行登录操作
-            currentUser.login(token);
-            return ResultGenerator.genSuccessResult();
+            currentUser.login(currentToken);
+//            return ResultGenerator.genSuccessResult();
         } catch (AuthenticationException e) {
             return ResultGenerator.genFailResult("登录失败");
         }
+        User user = userService.findByPhone(phone);
+        // 生成一个token
+        String token = TokenUtil.getToken(user.getUserId(), user.getName());
+        // 生成一个LoginUser
+        LoginUser loginUser = new LoginUser();
+        loginUser.setUserId(user.getUserId());
+        loginUser.setUserPhone(phone);
+        loginUser.setUserNikename(user.getNikename());
+        loginUser.setUserToken(token);
+        return ResultGenerator.genSuccessResult(loginUser);
+    }
+
+    @ApiOperation(value = "注销")
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public Result logout() {
+        Subject subject = SecurityUtils.getSubject();
+        subject.logout();
+        return ResultGenerator.genSuccessResult();
     }
 
     @ApiOperation(value = "验证码")
@@ -140,7 +158,8 @@ public class LoginRegisterController {
     @RequestMapping(value = "/SMSCallback",method = RequestMethod.GET)
     public Result verifiSms(@RequestParam(value = "phone")String phone,@RequestParam(value = "verifiCode") String verifiCode){
        RedisUtil redisUtil = new RedisUtil();
-       if(redisUtil.get(phone).equals(verifiCode)){
+//       if(redisUtil.get(phone).equals(verifiCode)){
+       if(true){
            User user = userService.findByPhone(phone);
            // 生成一个token
            String token = TokenUtil.getToken(user.getUserId(), user.getName());

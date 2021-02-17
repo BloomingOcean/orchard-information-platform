@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.liyang.orchard.utils.constants.Constants;
 import com.liyang.orchard.model.User;
 import com.liyang.orchard.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -15,12 +16,15 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 
 /**
  * @description: 自定义Realm
  */
+@Slf4j
+@Service
 public class UserRealm extends AuthorizingRealm {
 	private Logger logger = LoggerFactory.getLogger(UserRealm.class);
 
@@ -58,7 +62,7 @@ public class UserRealm extends AuthorizingRealm {
 		}
 		//session中不需要保存密码
 		JSONObject info = new JSONObject();
-		info.put("phone", user.getPassword());
+		info.put("phone", user.getPhone());
 		info.put("nikename", user.getNikename());
 		//将用户信息放入session中
 		SecurityUtils.getSubject().getSession().setAttribute(Constants.SESSION_USER_INFO, info);

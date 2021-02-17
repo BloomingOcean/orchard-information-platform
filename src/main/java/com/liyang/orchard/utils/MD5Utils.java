@@ -7,7 +7,7 @@ public class MD5Utils {
         return DigestUtils.md5Hex(src);
     }
 
-    // 固定盐值
+    // 固定盐值e28d
     private static final String salt = "e52d78a4a598edd6";
 
     public static String inputPassToFormPass(String inputPass) {

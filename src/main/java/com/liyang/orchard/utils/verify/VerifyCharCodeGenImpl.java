@@ -1,5 +1,4 @@
 package com.liyang.orchard.utils.verify;
-import com.liyang.orchard.utils.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.imageio.ImageIO;
