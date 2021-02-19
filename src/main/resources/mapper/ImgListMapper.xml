@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liyang.orchard.dao.ImgListMapper">
+  <resultMap id="BaseResultMap" type="com.liyang.orchard.model.ImgList">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="img_id" jdbcType="INTEGER" property="imgId" />
+    <result column="info_square_id" jdbcType="INTEGER" property="infoSquareId" />
+    <result column="owner_house_id" jdbcType="INTEGER" property="ownerHouseId" />
+    <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
+  </resultMap>
+
+  <delete id="deleteByInfoSquareId">
+    DELETE FROM img_list
+    WHERE info_square_id=#{InfoSquareId}
+  </delete>
+
+  <delete id="deleteByOwnerHouseId">
+    DELETE FROM img_list
+    WHERE owner_house_id=#{ownerHouseId}
+  </delete>
+
+  <select id="selectByInfoSquareId" resultMap="BaseResultMap" parameterType="int">
+    select * from img_list where info_square_id=#{InfoSquareId};
+  </select>
+
+  <select id="selectByOwnerHouseId" resultMap="BaseResultMap" parameterType="int">
+    select * from img_list where owner_house_id=#{OwnerHouseId};
+  </select>
+</mapper>

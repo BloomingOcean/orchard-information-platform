@@ -2,7 +2,30 @@ package com.liyang.orchard.dao;
 
 import com.liyang.orchard.core.Mapper;
 import com.liyang.orchard.model.InfoSquare;
+import com.liyang.orchard.model.infosquare.*;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 @org.apache.ibatis.annotations.Mapper
 public interface InfoSquareMapper extends Mapper<InfoSquare> {
+
+    InfoSquare getInfoById(@Param("infoID") Integer infoID);
+
+    Integer insertBuyInfoSquare(@Param("BIS") BuyInfoSquare buyInfoSquare,@Param("name") String name);
+
+    Integer insertSupplyInfoSquare(@Param("SIS")SupplyInfoSquare supplyInfoSquare,@Param("name") String name);
+
+    Integer insertLabourInfoSquare(@Param("LaIS")LabourInfoSquare labourInfoSquare,@Param("name") String name);
+
+    Integer insertLeaseInfoSquare(@Param("LeIS")LeaseInfoSquare leaseInfoSquare,@Param("name") String name);
+
+    Integer insertTransferInfoSquare(@Param("TIS")TransferInfoSquare transferInfoSquare,@Param("name") String name);
+
+    List<PaginationInfoSquare> selectMyInfoSquareList(@Param("userId") Integer userId);
+
+    List<InfoSquare> selectInfoSquareById(@Param("infoId") Integer infoId);
+
+    void updateInfoSquare(@Param("UIQ")InfoSquare infoSquare, @Param("name") String name);
 }

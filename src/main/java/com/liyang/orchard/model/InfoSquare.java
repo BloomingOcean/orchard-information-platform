@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 import javax.persistence.*;
 
 @Data
@@ -46,13 +47,17 @@ public class InfoSquare {
     @Column(name = "phone")
     private String phone;
 
-    @ApiModelProperty(value = "图片地址")
-    @Column(name = "img_url")
-    private String imgUrl;
+//    @ApiModelProperty(value = "图片地址列表")
+//    @Transient
+//    private List<ImgList> imgList;
+
+    @ApiModelProperty(value = "图片地址列表")
+    @Transient
+    private List<String> imgList;
 
     @ApiModelProperty(value = "视频源")
-    @Column(name = "video_source")
-    private String videoSource;
+    @Column(name = "video_url")
+    private String videoUrl;
 
     @ApiModelProperty(value = "求购重量")
     @Column(name = "buy_weight")

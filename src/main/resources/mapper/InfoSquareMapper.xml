@@ -12,11 +12,89 @@
     <result column="address" jdbcType="VARCHAR" property="address" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="phone" jdbcType="VARCHAR" property="phone" />
-    <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
-    <result column="video_source" jdbcType="VARCHAR" property="videoSource" />
+    <result column="video_url" jdbcType="VARCHAR" property="videoUrl" />
     <result column="buy_weight" jdbcType="VARCHAR" property="buyWeight" />
     <result column="recruit_num" jdbcType="VARCHAR" property="recruitNum" />
     <result column="info_type_id" jdbcType="INTEGER" property="infoTypeId" />
     <result column="release_date" jdbcType="TIMESTAMP" property="releaseDate" />
+    <collection property="imgList" ofType="com.liyang.orchard.model.ImgList">
+      <result property="imgId" column="img_id"/>
+      <result property="infoSquareId" column="info_square_id"/>
+      <result property="ownerHouseId" column="owner_house_id"/>
+      <result property="imgUrl" column="img_url"/>
+    </collection>
   </resultMap>
+
+  <resultMap id="PaginationInfoSquareMap" type="com.liyang.orchard.model.infosquare.PaginationInfoSquare">
+    <id column="info_id" jdbcType="INTEGER" property="infoId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="info_type_id" jdbcType="INTEGER" property="infoTypeId" />
+<!--    <result column="imgList" jdbcType="List" property="imgList" />-->
+  </resultMap>
+
+  <select id="getInfoById" resultMap="BaseResultMap">
+    select * from info_square
+    <where>
+      info_id=#{infoID}
+    </where>
+  </select>
+
+  <select id="selectInfoSquareById" resultMap="BaseResultMap">
+    select * from info_square
+    <where>
+      info_id=#{infoID}
+    </where>
+  </select>
+
+  <!--  <select id="getInfoById" resultMap="BaseResultMap">-->
+<!--    SELECT * FROM info_square ins,img_list iml-->
+<!--    WHERE ins.info_id=iml.info_square_id-->
+<!--    AND ins.info_id=#{infoID}-->
+<!--  </select>-->
+
+  <insert id="insertBuyInfoSquare" useGeneratedKeys="true" parameterType="com.liyang.orchard.model.infosquare.BuyInfoSquare">
+    insert into info_square(user_id,title,description,address,phone,buy_weight,name,info_type_id,release_date)
+    values(#{BIS.userId},#{BIS.title},#{BIS.description},#{BIS.address},#{BIS.phone},#{BIS.buyWeight},#{name},2,NOW())
+  </insert>
+
+  <insert id="insertSupplyInfoSquare" useGeneratedKeys="true" parameterType="com.liyang.orchard.model.infosquare.SupplyInfoSquare">
+    insert into info_square(user_id,title,description,address,phone,name,info_type_id,release_date)
+    values(#{SIS.userId},#{SIS.title},#{SIS.description},#{SIS.address},#{SIS.phone},#{name},1,NOW())
+  </insert>
+
+  <insert id="insertLabourInfoSquare" useGeneratedKeys="true" parameterType="com.liyang.orchard.model.infosquare.LabourInfoSquare">
+    insert into info_square(user_id,title,description,address,phone,recruit_num,name,info_type_id,release_date)
+    values(#{LaIS.userId},#{LaIS.title},#{LaIS.description},#{LaIS.address},#{LaIS.phone},#{LaIS.recruitNum},#{name},4,NOW())
+  </insert>
+
+  <insert id="insertLeaseInfoSquare" useGeneratedKeys="true" parameterType="com.liyang.orchard.model.infosquare.LeaseInfoSquare">
+    insert into info_square(user_id,title,description,address,phone,name,info_type_id,release_date)
+    values(#{LeIS.userId},#{LeIS.title},#{LeIS.description},#{LeIS.address},#{LeIS.phone},#{name},5,NOW())
+  </insert>
+
+  <insert id="insertTransferInfoSquare" useGeneratedKeys="true" parameterType="com.liyang.orchard.model.infosquare.TransferInfoSquare">
+    insert into info_square(user_id,title,description,address,phone,name,info_type_id,release_date)
+    values(#{TIS.userId},#{TIS.title},#{TIS.description},#{TIS.address},#{TIS.phone},#{name},3,NOW())
+  </insert>
+
+  <select id="selectMyInfoSquareList" resultMap="PaginationInfoSquareMap">
+    select * from info_square where user_id=#{userId}
+  </select>
+
+  <update id="updateInfoSquare">
+    UPDATE info_square
+    <set>
+        user_id=#{UIQ.userId},title=#{UIQ.title},description=#{UIQ.description},
+        address=#{UIQ.address},`name`=#{name},phone=#{UIQ.phone},
+        video_url=#{UIQ.videoUrl},buy_weight=#{UIQ.buyWeight},
+        recruit_num=#{UIQ.recruitNum},info_type_id=#{UIQ.infoTypeId},release_date=NOW()
+    </set>
+    <where>
+      info_id = #{UIQ.infoId}
+    </where>
+  </update>
+
 </mapper>
