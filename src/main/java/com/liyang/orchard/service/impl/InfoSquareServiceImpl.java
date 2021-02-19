@@ -124,25 +124,26 @@ public class InfoSquareServiceImpl extends AbstractService<InfoSquare> implement
     public List<PaginationInfoSquare> selectMyInfoSquareList(Integer userId) {
 //        List<String> imgList = new LinkedList<>();
         List<PaginationInfoSquare> list = infoSquareMapper.selectMyInfoSquareList(userId);
-        for (int i = 0; i < list.size(); i++) {
-            Integer infoId = list.get(i).getInfoId();
-            System.out.println("infoId:"+infoId);
-            List<ImgList> imgLists = imgListMapper.selectByInfoSquareId(infoId);
-            List<String> imgList = new LinkedList<>();
-            for (int i1 = 0; i1 < imgLists.size(); i1++) {
-                imgList.add(imgLists.get(i1).getImgUrl());
-            }
-            System.out.println("imgList:"+imgList);
-            List<String> imgList2 = imgList;
-            list.get(i).setImgList(imgList2);
-            imgList.clear();
-        }
+        // for循环赋值（效率不高）
+        //        for (int i = 0; i < list.size(); i++) {
+//            Integer infoId = list.get(i).getInfoId();
+//            System.out.println("infoId:"+infoId);
+//            List<ImgList> imgLists = imgListMapper.selectByInfoSquareId(infoId);
+//            List<String> imgList = new LinkedList<>();
+//            for (int i1 = 0; i1 < imgLists.size(); i1++) {
+//                imgList.add(imgLists.get(i1).getImgUrl());
+//            }
+//            System.out.println("imgList:"+imgList);
+//            List<String> imgList2 = imgList;
+//            list.get(i).setImgList(imgList2);
+//            imgList.clear();
+//        }
         return list;
     }
 
     @Override
-    public InfoSquare getInfoById(Integer infoId) {
-        return infoSquareMapper.getInfoById(infoId);
+    public InfoSquare selectInfoSquareAllById(Integer infoId) {
+        return infoSquareMapper.selectInfoSquareAllById(infoId);
     }
 
     public Result updateInfoSquare(InfoSquare infoSquare) {

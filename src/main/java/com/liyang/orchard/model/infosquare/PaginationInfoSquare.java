@@ -1,15 +1,13 @@
 package com.liyang.orchard.model.infosquare;
 
+import com.liyang.orchard.model.ImgList;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.List;
 
 @Data
@@ -61,7 +59,8 @@ public class PaginationInfoSquare {
 //    private String videoUrl;
 
     @ApiModelProperty(value = "图片列表")
-    private List<String> imgList;
+    @Transient
+    private List<ImgList> imgList;
 
 //    @ApiModelProperty(value = "求购重量")
 //    @Column(name = "buy_weight")

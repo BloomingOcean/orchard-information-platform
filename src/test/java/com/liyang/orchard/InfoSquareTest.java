@@ -38,7 +38,7 @@ public class InfoSquareTest extends Tester{
     @Test
     public void test(){
         System.out.println(infoSquareService.selectMyInfoSquareList(1));
-//        System.out.println(infoSquareService.selectInfoSquareById(1));
+//        System.out.println(infoSquareService.selectInfoSquareAllById(1));
     }
 
     @Test

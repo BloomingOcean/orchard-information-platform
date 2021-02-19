@@ -27,7 +27,7 @@ public interface InfoSquareService extends Service<InfoSquare> {
 
     List<PaginationInfoSquare> selectMyInfoSquareList(Integer userId);
 
-    InfoSquare getInfoById(Integer infoId);
+    InfoSquare selectInfoSquareAllById(Integer infoId);
 
     Result updateInfoSquare(InfoSquare infoSquare);
 }

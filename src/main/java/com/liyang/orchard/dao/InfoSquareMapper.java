@@ -11,7 +11,7 @@ import java.util.List;
 @org.apache.ibatis.annotations.Mapper
 public interface InfoSquareMapper extends Mapper<InfoSquare> {
 
-    InfoSquare getInfoById(@Param("infoID") Integer infoID);
+    InfoSquare getInfoById(@Param("infoId") Integer infoId);
 
     Integer insertBuyInfoSquare(@Param("BIS") BuyInfoSquare buyInfoSquare,@Param("name") String name);
 
@@ -25,7 +25,7 @@ public interface InfoSquareMapper extends Mapper<InfoSquare> {
 
     List<PaginationInfoSquare> selectMyInfoSquareList(@Param("userId") Integer userId);
 
-    List<InfoSquare> selectInfoSquareById(@Param("infoId") Integer infoId);
+    InfoSquare selectInfoSquareAllById(@Param("infoId") Integer infoId);
 
     void updateInfoSquare(@Param("UIQ")InfoSquare infoSquare, @Param("name") String name);
 }

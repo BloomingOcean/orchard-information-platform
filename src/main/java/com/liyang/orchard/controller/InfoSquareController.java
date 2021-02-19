@@ -9,6 +9,7 @@ import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiOperation;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -66,41 +67,41 @@ public class InfoSquareController {
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 
-    @ApiOperation(value = "查询指定id的详细信息")
+    @ApiOperation(value = "查询 信息详情")
     @RequestMapping(value = "/details", method = RequestMethod.GET)
     public Result details(@RequestParam Integer id) {
         return ResultGenerator.genSuccessResult(infoSquareService.selectDetailsInfoSquareById(id));
     }
 
-    @ApiOperation(value = "发布求购信息")
+    @ApiOperation(value = "发布 求购信息")
     @RequestMapping(value = "/buy", method = RequestMethod.POST)
     public Result buy(@RequestBody BuyInfoSquare buyInfoSquare) {
         infoSquareService.insertBuyInfoSquare(buyInfoSquare);
         return ResultGenerator.genSuccessResult();
     }
 
-    @ApiOperation(value = "发布供应信息")
+    @ApiOperation(value = "发布 供应信息")
     @RequestMapping(value = "/supply", method = RequestMethod.POST)
     public Result supply(@RequestBody SupplyInfoSquare supplyInfoSquare) {
         infoSquareService.insertSupplyInfoSquare(supplyInfoSquare);
         return ResultGenerator.genSuccessResult();
     }
 
-    @ApiOperation(value = "发布转让信息")
+    @ApiOperation(value = "发布 转让信息")
     @RequestMapping(value = "/transfer", method = RequestMethod.POST)
     public Result transfer(@RequestBody TransferInfoSquare transferInfoSquare) {
         infoSquareService.insertTransferInfoSquare(transferInfoSquare);
         return ResultGenerator.genSuccessResult();
     }
 
-    @ApiOperation(value = "发布劳务信息")
+    @ApiOperation(value = "发布 劳务信息")
     @RequestMapping(value = "/labour", method = RequestMethod.POST)
     public Result labour(@RequestBody LabourInfoSquare labourInfoSquare) {
         infoSquareService.insertLabourInfoSquare(labourInfoSquare);
         return ResultGenerator.genSuccessResult();
     }
 
-    @ApiOperation(value = "发布租赁信息")
+    @ApiOperation(value = "发布 租赁信息")
     @RequestMapping(value = "/lease", method = RequestMethod.POST)
     public Result lease(@RequestBody LeaseInfoSquare leaseInfoSquare) {
         infoSquareService.insertLeaseInfoSquare(leaseInfoSquare);
@@ -123,5 +124,12 @@ public class InfoSquareController {
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public Result update(@RequestBody InfoSquare infoSquare) {
         return infoSquareService.updateInfoSquare(infoSquare);
+    }
+
+    @ApiOperation(value = "查询 信息")
+    @RequestMapping(value = "/sebyid", method = RequestMethod.POST)
+    public Result update(@RequestParam("infoId") Integer infoId) {
+        infoSquareService.selectInfoSquareAllById(infoId);
+        return ResultGenerator.genSuccessResult();
     }
 }
