@@ -8,9 +8,32 @@
     <id column="owner_house_id" jdbcType="INTEGER" property="ownerHouseId" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="description" jdbcType="VARCHAR" property="description" />
-    <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
+<!--    <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />-->
     <result column="video_source" jdbcType="VARCHAR" property="videoSource" />
     <result column="like_it" jdbcType="INTEGER" property="likeIt" />
     <result column="date" jdbcType="TIMESTAMP" property="date" />
   </resultMap>
+
+  <resultMap id="AddOwnerHouse" type="com.liyang.orchard.model.ownerhouse.AddOwnerHouse">
+    <id column="owner_house_id" jdbcType="INTEGER" property="ownerHouseId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <!--    <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />-->
+    <result column="video_source" jdbcType="VARCHAR" property="videoSource" />
+  </resultMap>
+
+  <insert id="addOwnerHouse" useGeneratedKeys="true" keyProperty="ownerHouseId">
+    INSERT INTO owner_house(user_id,description,video_source,date)
+    VALUES (#{userId},#{description},#{videoSource},NOW());
+  </insert>
+
+  <update id="updateOwnerHouse">
+    UPDATE owner_house
+    <set>
+      description=#{description},video_source=#{videoSource}
+    </set>
+    <where>
+      owner_house_id = #{ownerHouseId}
+    </where>
+  </update>
 </mapper>

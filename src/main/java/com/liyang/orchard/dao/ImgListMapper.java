@@ -9,11 +9,11 @@ import java.util.List;
 @org.apache.ibatis.annotations.Mapper
 public interface ImgListMapper extends Mapper<ImgList> {
 
-    List<ImgList> selectByInfoSquareId(@Param("InfoSquareId") Integer infoSquareId);
+    List<ImgList> selectByInfoSquareId(@Param("infoSquareId") Integer infoSquareId);
 
-    List<ImgList> selectByOwnerHouseId(@Param("OwnerHouseId") Integer ownerHouseId);
+    List<ImgList> selectByOwnerHouseId(@Param("ownerHouseId") Integer ownerHouseId);
 
-    void deleteByInfoSquareId(@Param("InfoSquareId") Integer infoSquareId);
+    void deleteByInfoSquareId(@Param("infoSquareId") Integer infoSquareId);
 
-    void deleteByOwnerHouseId(@Param("OwnerHouseId") Integer ownerHouseId);
+    void deleteByOwnerHouseId(@Param("ownerHouseId") Integer ownerHouseId);
 }

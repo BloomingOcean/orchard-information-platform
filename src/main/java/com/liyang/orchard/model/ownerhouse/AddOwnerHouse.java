@@ -1,4 +1,4 @@
-package com.liyang.orchard.model;
+package com.liyang.orchard.model.ownerhouse;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -6,15 +6,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.util.List;
 import javax.persistence.*;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "园主之家")
-@Table(name = "owner_house")
-public class OwnerHouse {
+@ApiModel(value = "发布 园主之家信息")
+public class AddOwnerHouse {
 
     @Id
     @ApiModelProperty(value = "园主之家ID")
@@ -30,20 +29,11 @@ public class OwnerHouse {
     @Column(name = "description")
     private String description;
 
-//    @ApiModelProperty(value = "图片URL")
-//    @Column(name = "img_url")
-//    private String imgUrl;
+    @ApiModelProperty(value = "图片URL")
+    private List<String> imgList;
 
     @ApiModelProperty(value = "视频源")
     @Column(name = "video_source")
     private String videoSource;
-
-    @ApiModelProperty(value = "点赞数量")
-    @Column(name = "like_it")
-    private Integer likeIt;
-
-    @ApiModelProperty(value = "发布日期")
-    @Column(name = "date")
-    private Date date;
 
 }

@@ -1,6 +1,5 @@
 package com.liyang.orchard.config.token;
 
-import com.liyang.orchard.core.ResultGenerator;
 import com.liyang.orchard.utils.TokenUtil;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -9,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
-import static java.awt.SystemColor.info;
 
 public class TokenInterceptor implements HandlerInterceptor {
     @Override

@@ -22,7 +22,7 @@ import java.util.List;
 
 @Configuration
 @EnableSwagger2 // 启用 Swagger2
-@Profile({"dev","test","local"})
+//@Profile({"dev","test","local"})
 public class SwaggerConfig {
 
     @Value("${sys.version}")

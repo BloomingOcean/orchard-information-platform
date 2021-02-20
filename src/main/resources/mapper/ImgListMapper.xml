@@ -13,7 +13,7 @@
 
   <delete id="deleteByInfoSquareId">
     DELETE FROM img_list
-    WHERE info_square_id=#{InfoSquareId}
+    WHERE info_square_id=#{infoSquareId}
   </delete>
 
   <delete id="deleteByOwnerHouseId">
@@ -22,10 +22,10 @@
   </delete>
 
   <select id="selectByInfoSquareId" resultMap="BaseResultMap" parameterType="int">
-    select * from img_list where info_square_id=#{InfoSquareId};
+    select * from img_list where info_square_id=#{infoSquareId};
   </select>
 
   <select id="selectByOwnerHouseId" resultMap="BaseResultMap" parameterType="int">
-    select * from img_list where owner_house_id=#{OwnerHouseId};
+    select * from img_list where owner_house_id=#{ownerHouseId};
   </select>
 </mapper>

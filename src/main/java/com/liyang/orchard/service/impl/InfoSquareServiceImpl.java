@@ -30,13 +30,16 @@ public class InfoSquareServiceImpl extends AbstractService<InfoSquare> implement
     private InfoSquareMapper infoSquareMapper;
 
     @Resource
-    private ImgListMapper imgListMapper;
-
-    @Resource
     private UserMapper userMapper;
 
     @Resource
     private ImgListService imgListService;
+
+    @Override
+    public void deleteById(Integer infoSquareId){
+        mapper.deleteByPrimaryKey(infoSquareId);
+        imgListService.deleteByInfoSquareId(infoSquareId);
+    }
 
     @Override
     public DetailsInfoSquare selectDetailsInfoSquareById(Integer id) {
@@ -53,7 +56,7 @@ public class InfoSquareServiceImpl extends AbstractService<InfoSquare> implement
         detailsInfoSquare.setUserNikename(user.getNickname());
         // 图片List赋值
         List<String> imgList = new LinkedList<>();
-        for (ImgList Temp: imgListMapper.selectByInfoSquareId(infoSquare.getInfoId())
+        for (ImgList Temp: imgListService.selectByInfoSquareId(infoSquare.getInfoId())
         ) {imgList.add(Temp.getImgUrl());
         }
         detailsInfoSquare.setImgList(imgList);
@@ -172,7 +175,7 @@ public class InfoSquareServiceImpl extends AbstractService<InfoSquare> implement
         Integer infoSquareId = infoSquare.getInfoId();
         System.out.println("infoSquareId:"+infoSquareId);
         // 删除imgList原先图片
-        imgListMapper.deleteByInfoSquareId(infoSquareId);
+        imgListService.deleteByInfoSquareId(infoSquareId);
         // 更新imgList表数据
         List<String> imgList = new LinkedList<>();
         for (String newImgUrl: infoSquare.getImgList()
