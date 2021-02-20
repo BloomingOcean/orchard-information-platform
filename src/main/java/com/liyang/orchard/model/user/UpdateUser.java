@@ -1,4 +1,4 @@
-package com.liyang.orchard.model;
+package com.liyang.orchard.model.user;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -12,9 +12,8 @@ import javax.persistence.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "用户")
-@Table(name = "user")
-public class User {
+@ApiModel(value = "用户自己能更新的信息")
+public class UpdateUser {
 
     @Id
     @ApiModelProperty(value = "用户ID")
@@ -34,25 +33,21 @@ public class User {
     @Column(name = "name")
     private String name;
 
-    @ApiModelProperty(value = "身份证")
-    @Column(name = "id_number")
-    private String idNumber;
+//    @ApiModelProperty(value = "身份证")
+//    @Column(name = "id_number")
+//    private String idNumber;
 
-    @ApiModelProperty(value = "实名认证")
-    @Column(name = "verified")
-    private String verified;
+//    @ApiModelProperty(value = "实名认证")
+//    @Column(name = "verified")
+//    private String verified;
 
-    @ApiModelProperty(value = "会员截至日期")
-    @Column(name = "membership_deadline")
-    private Date membershipDeadline;
+//    @ApiModelProperty(value = "会员截至日期")
+//    @Column(name = "membership_deadline")
+//    private Date membershipDeadline;
 
     @ApiModelProperty(value = "电话号码")
     @Column(name = "phone")
     private String phone;
-
-    @ApiModelProperty(value = "密码")
-    @Column(name = "password")
-    private String password;
 
     @ApiModelProperty(value = "用户个人描述")
     @Column(name = "user_description")
@@ -62,7 +57,7 @@ public class User {
     @Column(name = "user_address")
     private String userAddress;
 
-    @ApiModelProperty(value = "用户角色id")
-    @Column(name = "role_id")
-    private String roleId;
+//    @ApiModelProperty(value = "用户角色id")
+//    @Column(name = "role_id")
+//    private String roleId;
 }

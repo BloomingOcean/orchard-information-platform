@@ -7,12 +7,70 @@
     -->
     <id column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="portrait_url" jdbcType="VARCHAR" property="portraitUrl" />
-    <result column="nikename" jdbcType="VARCHAR" property="nikename" />
+    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="id_number" jdbcType="VARCHAR" property="idNumber" />
     <result column="verified" jdbcType="VARCHAR" property="verified" />
     <result column="membership_deadline" jdbcType="TIMESTAMP" property="membershipDeadline" />
     <result column="phone" jdbcType="VARCHAR" property="phone" />
     <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="user_address" jdbcType="VARCHAR" property="userAddress" />
+    <result column="role_id" jdbcType="VARCHAR" property="roleId" />
   </resultMap>
+
+  <resultMap id="DetailUser" type="com.liyang.orchard.model.user.DetailUser">
+    <id column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="portrait_url" jdbcType="VARCHAR" property="portraitUrl" />
+    <result column="user_description" jdbcType="VARCHAR" property="userDescription" />
+    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="id_number" jdbcType="VARCHAR" property="idNumber" />
+    <result column="verified" jdbcType="VARCHAR" property="verified" />
+    <result column="membership_deadline" jdbcType="TIMESTAMP" property="membershipDeadline" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="user_address" jdbcType="VARCHAR" property="userAddress" />
+    <result column="role_id" jdbcType="VARCHAR" property="roleId" />
+  </resultMap>
+
+  <resultMap id="UpdateUser" type="com.liyang.orchard.model.user.UpdateUser">
+    <id column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="portrait_url" jdbcType="VARCHAR" property="portraitUrl" />
+    <result column="user_description" jdbcType="VARCHAR" property="userDescription" />
+    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="user_address" jdbcType="VARCHAR" property="userAddress" />
+  </resultMap>
+
+  <resultMap id="SimpleUser" type="com.liyang.orchard.model.user.SimpleUser">
+    <id column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="portrait_url" jdbcType="VARCHAR" property="userPortrait" />
+    <result column="nickname" jdbcType="VARCHAR" property="userNickname" />
+    <result column="user_description" jdbcType="VARCHAR" property="userDescription" />
+  </resultMap>
+
+  <select id="getSimpleUserInfo" resultMap="SimpleUser">
+    select user_id,nickname,user_description,portrait_url
+    from user
+    where user_id=#{userId}
+  </select>
+
+  <select id="getDetailUserInfo" resultMap="DetailUser">
+    select user_id,portrait_url,nickname,name,id_number,verified,phone,role_id,user_description,user_address,membership_deadline
+    from user
+    where user_id=#{userId}
+  </select>
+
+  <select id="setUserInfo" resultMap="UpdateUser">
+    update user
+    <set>
+        portrait_url=#{updateUser.portraitUrl},nickname=#{updateUser.nickname},
+        `name`=#{updateUser.name},phone=#{updateUser.phone},
+        user_description=#{updateUser.userDescription},
+        user_address=#{updateUser.userAddress},
+    </set>
+    <where>
+      user_id = #{updateUser.userId}
+    </where>
+  </select>
 </mapper>

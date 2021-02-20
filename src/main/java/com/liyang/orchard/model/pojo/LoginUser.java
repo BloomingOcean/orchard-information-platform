@@ -12,7 +12,6 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ApiModel(value = "登录用户")
-//@Table(name = "user")
 public class LoginUser {
 
     @ApiModelProperty(value = "用户ID")

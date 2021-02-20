@@ -63,7 +63,7 @@ public class UserRealm extends AuthorizingRealm {
 		//session中不需要保存密码
 		JSONObject info = new JSONObject();
 		info.put("phone", user.getPhone());
-		info.put("nikename", user.getNikename());
+		info.put("nikename", user.getNickname());
 		//将用户信息放入session中
 		SecurityUtils.getSubject().getSession().setAttribute(Constants.SESSION_USER_INFO, info);
 		//交给AuthenticatingRealm使用CredentialsMatcher进行密码匹配

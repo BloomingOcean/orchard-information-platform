@@ -9,6 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.List;
 @RequestMapping("/img/list")
 @CrossOrigin
 @Api(tags = "")
+@ApiIgnore
 public class ImgListController {
     @Resource
     private ImgListService imgListService;

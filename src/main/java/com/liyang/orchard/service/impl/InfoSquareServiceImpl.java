@@ -50,7 +50,7 @@ public class InfoSquareServiceImpl extends AbstractService<InfoSquare> implement
         detailsInfoSquare.setInfoTypeId(infoSquare.getInfoTypeId());
         // nickname
         User user = userMapper.findByPhone(infoSquare.getPhone());
-        detailsInfoSquare.setUserNikename(user.getNikename());
+        detailsInfoSquare.setUserNikename(user.getNickname());
         // 图片List赋值
         List<String> imgList = new LinkedList<>();
         for (ImgList Temp: imgListMapper.selectByInfoSquareId(infoSquare.getInfoId())

@@ -102,7 +102,7 @@ public class LoginRegisterController {
         LoginUser loginUser = new LoginUser();
         loginUser.setUserId(user.getUserId());
         loginUser.setUserPhone(phone);
-        loginUser.setUserNikename(user.getNikename());
+        loginUser.setUserNikename(user.getNickname());
         loginUser.setUserToken(token);
         return ResultGenerator.genSuccessResult(loginUser);
     }
@@ -167,7 +167,7 @@ public class LoginRegisterController {
            LoginUser loginUser = new LoginUser();
            loginUser.setUserId(user.getUserId());
            loginUser.setUserPhone(phone);
-           loginUser.setUserNikename(user.getNikename());
+           loginUser.setUserNikename(user.getNickname());
            loginUser.setUserToken(token);
            return ResultGenerator.genSuccessResult(loginUser);
        }else {

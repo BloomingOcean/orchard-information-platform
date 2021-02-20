@@ -1,4 +1,4 @@
-package com.liyang.orchard.model;
+package com.liyang.orchard.model.user;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -14,7 +14,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @ApiModel(value = "用户")
 @Table(name = "user")
-public class User {
+public class DetailUser {
 
     @Id
     @ApiModelProperty(value = "用户ID")
@@ -49,10 +49,6 @@ public class User {
     @ApiModelProperty(value = "电话号码")
     @Column(name = "phone")
     private String phone;
-
-    @ApiModelProperty(value = "密码")
-    @Column(name = "password")
-    private String password;
 
     @ApiModelProperty(value = "用户个人描述")
     @Column(name = "user_description")

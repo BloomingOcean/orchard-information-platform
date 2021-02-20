@@ -1,6 +1,10 @@
 package com.liyang.orchard.service;
 import com.liyang.orchard.model.User;
 import com.liyang.orchard.core.Service;
+import com.liyang.orchard.model.user.DetailUser;
+import com.liyang.orchard.model.user.SimpleUser;
+import com.liyang.orchard.model.user.UpdateUser;
+import org.apache.ibatis.annotations.Param;
 
 
 /**
@@ -14,4 +18,10 @@ public interface UserService extends Service<User> {
      * @return 查找到的用户
      */
     User findByPhone(String phone);
+
+    SimpleUser getSimpleUserInfo(Integer userId);
+
+    DetailUser getDetailUserInfo(Integer userId);
+
+    void setUserInfo(UpdateUser updateUser);
 }

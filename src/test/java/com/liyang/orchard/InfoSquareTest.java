@@ -19,8 +19,6 @@ import javax.annotation.Resource;
 import java.util.LinkedList;
 import java.util.List;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
 public class InfoSquareTest extends Tester{
 
     @Resource

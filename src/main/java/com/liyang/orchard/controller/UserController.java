@@ -2,6 +2,7 @@ package com.liyang.orchard.controller;
 import com.liyang.orchard.core.Result;
 import com.liyang.orchard.core.ResultGenerator;
 import com.liyang.orchard.model.User;
+import com.liyang.orchard.model.user.UpdateUser;
 import com.liyang.orchard.service.UserService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -9,6 +10,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -38,6 +40,7 @@ public class UserController {
         return ResultGenerator.genSuccessResult();
     }
 
+    @ApiIgnore
     @ApiOperation(value = "根据id更新-用户")
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
     public Result update(@RequestBody User user) {
@@ -45,6 +48,7 @@ public class UserController {
         return ResultGenerator.genSuccessResult();
     }
 
+    @ApiIgnore
     @ApiOperation(value = "根据id查询-用户")
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
     public Result detail(@ApiParam("") @RequestParam Integer id) {
@@ -59,5 +63,24 @@ public class UserController {
         List<User> list = userService.findAll();
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
+    @ApiOperation(value = "用户个人信息（简单）")
+    @RequestMapping(value = "/simpleinfo", method = RequestMethod.GET)
+    public Result getSimpleUserInfo(@ApiParam("用户ID") @RequestParam("userId") Integer id) {
+        return ResultGenerator.genSuccessResult(userService.getSimpleUserInfo(id));
+    }
+
+    @ApiOperation(value = "用户个人信息（详细）")
+    @RequestMapping(value = "/detailinfo", method = RequestMethod.GET)
+    public Result getDetailUserInfo(@ApiParam("用户ID") @RequestParam("userId") Integer id) {
+        return ResultGenerator.genSuccessResult(userService.getDetailUserInfo(id));
+    }
+
+    @ApiOperation(value = "更新个人信息")
+    @RequestMapping(value = "/updateinfo", method = RequestMethod.PUT)
+    public Result setUserInfo(@ApiParam("用户更新后的信息") @RequestBody UpdateUser updateUser) {
+        userService.setUserInfo(updateUser);
+        return ResultGenerator.genSuccessResult();
     }
 }

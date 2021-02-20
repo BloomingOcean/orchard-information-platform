@@ -2,6 +2,9 @@ package com.liyang.orchard.dao;
 
 import com.liyang.orchard.core.Mapper;
 import com.liyang.orchard.model.User;
+import com.liyang.orchard.model.user.DetailUser;
+import com.liyang.orchard.model.user.SimpleUser;
+import com.liyang.orchard.model.user.UpdateUser;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
@@ -27,4 +30,10 @@ public interface UserMapper extends Mapper<User> {
 
     @Select("SELECT * from user WHERE phone=#{userPhone}")
     User findByPhone(@Param("userPhone")String phone);
+
+    SimpleUser getSimpleUserInfo(@Param("userId")Integer userId);
+
+    DetailUser getDetailUserInfo(@Param("userId")Integer userId);
+
+    void setUserInfo(@Param("updateUser")UpdateUser updateUser);
 }
