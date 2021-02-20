@@ -60,10 +60,16 @@ public class InfoSquareServiceImpl extends AbstractService<InfoSquare> implement
         return detailsInfoSquare;
     }
 
+    /**
+     * useGeneratedKeys返回的是0或1，id的值会返回到参数实体的id里面去
+     * @param buyInfoSquare
+     */
     @Override
     public void insertBuyInfoSquare(BuyInfoSquare buyInfoSquare){
         String name = userMapper.selectByPrimaryKey(buyInfoSquare.getUserId()).getName();
-        Integer idKey = infoSquareMapper.insertBuyInfoSquare(buyInfoSquare, name);
+        infoSquareMapper.insertBuyInfoSquare(buyInfoSquare, name);
+        // 获得返回给参数的UserId的值
+        Integer idKey = buyInfoSquare.getInfoId();
         // 图片List存储
         List<String> imgList = new LinkedList<>();
         for (String newImgUrl: buyInfoSquare.getImgList()
@@ -75,7 +81,9 @@ public class InfoSquareServiceImpl extends AbstractService<InfoSquare> implement
     @Override
     public void insertSupplyInfoSquare(SupplyInfoSquare supplyInfoSquare) {
         String name = userMapper.selectByPrimaryKey(supplyInfoSquare.getUserId()).getName();
-        Integer idKey = infoSquareMapper.insertSupplyInfoSquare(supplyInfoSquare, name);
+        infoSquareMapper.insertSupplyInfoSquare(supplyInfoSquare, name);
+        // 获得返回给参数的UserId的值
+        Integer idKey = supplyInfoSquare.getInfoId();
         // 图片List存储
         List<String> imgList = new LinkedList<>();
         for (String newImgUrl: supplyInfoSquare.getImgList()
@@ -87,7 +95,9 @@ public class InfoSquareServiceImpl extends AbstractService<InfoSquare> implement
     @Override
     public void insertLabourInfoSquare(LabourInfoSquare labourInfoSquare) {
         String name = userMapper.selectByPrimaryKey(labourInfoSquare.getUserId()).getName();
-        Integer idKey = infoSquareMapper.insertLabourInfoSquare(labourInfoSquare, name);
+        infoSquareMapper.insertLabourInfoSquare(labourInfoSquare, name);
+        // 获得返回给参数的UserId的值
+        Integer idKey = labourInfoSquare.getInfoId();
         // 图片List存储
         List<String> imgList = new LinkedList<>();
         for (String newImgUrl: labourInfoSquare.getImgList()
@@ -99,7 +109,9 @@ public class InfoSquareServiceImpl extends AbstractService<InfoSquare> implement
     @Override
     public void insertLeaseInfoSquare(LeaseInfoSquare leaseInfoSquare) {
         String name = userMapper.selectByPrimaryKey(leaseInfoSquare.getUserId()).getName();
-        Integer idKey = infoSquareMapper.insertLeaseInfoSquare(leaseInfoSquare, name);
+        infoSquareMapper.insertLeaseInfoSquare(leaseInfoSquare, name);
+        // 获得返回给参数的UserId的值
+        Integer idKey = leaseInfoSquare.getInfoId();
         // 图片List存储
         List<String> imgList = new LinkedList<>();
         for (String newImgUrl: leaseInfoSquare.getImgList()
@@ -111,7 +123,9 @@ public class InfoSquareServiceImpl extends AbstractService<InfoSquare> implement
     @Override
     public void insertTransferInfoSquare(TransferInfoSquare transferInfoSquare) {
         String name = userMapper.selectByPrimaryKey(transferInfoSquare.getUserId()).getName();
-        Integer idKey = infoSquareMapper.insertTransferInfoSquare(transferInfoSquare, name);
+        infoSquareMapper.insertTransferInfoSquare(transferInfoSquare, name);
+        // 获得返回给参数的UserId的值
+        Integer idKey = transferInfoSquare.getInfoId();
         // 图片List存储
         List<String> imgList = new LinkedList<>();
         for (String newImgUrl: transferInfoSquare.getImgList()

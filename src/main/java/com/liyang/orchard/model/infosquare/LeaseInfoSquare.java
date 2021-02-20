@@ -1,5 +1,6 @@
 package com.liyang.orchard.model.infosquare;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -7,6 +8,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.List;
 
 @Data
@@ -14,6 +18,13 @@ import java.util.List;
 @NoArgsConstructor
 @ApiModel(value = "信息广场-发布租赁")
 public class LeaseInfoSquare {
+
+    @JsonIgnore
+    @Id
+    @ApiModelProperty(value = "信息ID")
+    @Column(name = "info_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer infoId;
 
     @ApiModelProperty(value = "用户ID")
     @Column(name = "user_id")

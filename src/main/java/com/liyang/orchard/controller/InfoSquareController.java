@@ -108,7 +108,6 @@ public class InfoSquareController {
         return ResultGenerator.genSuccessResult();
     }
 
-    // 还差List<ImgList>没实现
     @ApiOperation(value = "查询 我发布的信息")
     @RequestMapping(value = "/mylist", method = RequestMethod.GET)
     public Result mylist(@ApiParam("页数") @RequestParam(defaultValue = "0") Integer page,
@@ -121,7 +120,7 @@ public class InfoSquareController {
     }
 
     @ApiOperation(value = "修改 发布的信息")
-    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    @RequestMapping(value = "/update", method = RequestMethod.GET)
     public Result update(@RequestBody InfoSquare infoSquare) {
         return infoSquareService.updateInfoSquare(infoSquare);
     }

@@ -60,33 +60,33 @@
 <!--    </where>-->
 <!--  </select>-->
 
-    <select id="selectInfoSquareAllById" resultMap="BaseResultMap">
+  <select id="selectInfoSquareAllById" resultMap="BaseResultMap">
     SELECT * FROM info_square ins,img_list iml
     WHERE ins.info_id=iml.info_square_id
     AND ins.info_id=#{infoId}
   </select>
 
-  <insert id="insertBuyInfoSquare" useGeneratedKeys="true" parameterType="com.liyang.orchard.model.infosquare.BuyInfoSquare">
+  <insert id="insertBuyInfoSquare" useGeneratedKeys="true" keyProperty="BIS.infoId" parameterType="com.liyang.orchard.model.infosquare.BuyInfoSquare">
     insert into info_square(user_id,title,description,address,phone,buy_weight,name,info_type_id,release_date)
     values(#{BIS.userId},#{BIS.title},#{BIS.description},#{BIS.address},#{BIS.phone},#{BIS.buyWeight},#{name},2,NOW())
   </insert>
 
-  <insert id="insertSupplyInfoSquare" useGeneratedKeys="true" parameterType="com.liyang.orchard.model.infosquare.SupplyInfoSquare">
+  <insert id="insertSupplyInfoSquare" useGeneratedKeys="true" keyProperty="SIS.infoId" parameterType="com.liyang.orchard.model.infosquare.SupplyInfoSquare">
     insert into info_square(user_id,title,description,address,phone,name,info_type_id,release_date)
     values(#{SIS.userId},#{SIS.title},#{SIS.description},#{SIS.address},#{SIS.phone},#{name},1,NOW())
   </insert>
 
-  <insert id="insertLabourInfoSquare" useGeneratedKeys="true" parameterType="com.liyang.orchard.model.infosquare.LabourInfoSquare">
+  <insert id="insertLabourInfoSquare" useGeneratedKeys="true" keyProperty="LaIS.infoId" parameterType="com.liyang.orchard.model.infosquare.LabourInfoSquare">
     insert into info_square(user_id,title,description,address,phone,recruit_num,name,info_type_id,release_date)
     values(#{LaIS.userId},#{LaIS.title},#{LaIS.description},#{LaIS.address},#{LaIS.phone},#{LaIS.recruitNum},#{name},4,NOW())
   </insert>
 
-  <insert id="insertLeaseInfoSquare" useGeneratedKeys="true" parameterType="com.liyang.orchard.model.infosquare.LeaseInfoSquare">
+  <insert id="insertLeaseInfoSquare" useGeneratedKeys="true" keyProperty="LeIS.infoId" parameterType="com.liyang.orchard.model.infosquare.LeaseInfoSquare">
     insert into info_square(user_id,title,description,address,phone,name,info_type_id,release_date)
     values(#{LeIS.userId},#{LeIS.title},#{LeIS.description},#{LeIS.address},#{LeIS.phone},#{name},5,NOW())
   </insert>
 
-  <insert id="insertTransferInfoSquare" useGeneratedKeys="true" parameterType="com.liyang.orchard.model.infosquare.TransferInfoSquare">
+  <insert id="insertTransferInfoSquare" useGeneratedKeys="true" keyProperty="TIS.infoId" parameterType="com.liyang.orchard.model.infosquare.TransferInfoSquare">
     insert into info_square(user_id,title,description,address,phone,name,info_type_id,release_date)
     values(#{TIS.userId},#{TIS.title},#{TIS.description},#{TIS.address},#{TIS.phone},#{name},3,NOW())
   </insert>
