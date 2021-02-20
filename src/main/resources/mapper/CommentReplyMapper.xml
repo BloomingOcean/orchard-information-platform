@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liyang.orchard.dao.CommentReplyMapper">
+  <resultMap id="BaseResultMap" type="com.liyang.orchard.model.CommentReply">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="comment_reply_id" jdbcType="INTEGER" property="commentReplyId" />
+    <result column="comment_id" jdbcType="INTEGER" property="commentId" />
+    <result column="user_passive_id" jdbcType="INTEGER" property="userPassiveId" />
+    <result column="user_active_id" jdbcType="VARCHAR" property="userActiveId" />
+    <result column="report_text" jdbcType="VARCHAR" property="reportText" />
+    <result column="report_date" jdbcType="TIMESTAMP" property="reportDate" />
+  </resultMap>
+
+  <insert id="addCommentReply">
+    insert into comment_reply(comment_id, user_passive_id, user_active_id, report_text, report_date)
+    values(#{commentId},#{userPassiveId},#{userActiveId},#{reportText},NOW())
+  </insert>
+
+  <delete id="deleteCommentReplyById">
+    delete from comment_reply
+    where comment_reply_id=#{commentReportId};
+  </delete>
+
+  <delete id="deleteCommentReplyByCommentIds">
+    delete from comment_reply
+    where comment_id=#{CommentId};
+  </delete>
+
+</mapper>

@@ -12,4 +12,34 @@
     <result column="comment" jdbcType="VARCHAR" property="comment" />
     <result column="com_date" jdbcType="TIMESTAMP" property="comDate" />
   </resultMap>
+
+  <insert id="addInfoSquareComment">
+    insert into comment(info_id, user_id, comment, com_date)
+    values(#{infoId},#{userId},#{comment},NOW())
+  </insert>
+
+  <insert id="addOwnerHouseComment">
+    insert into comment(owner_house_id, user_id, comment, com_date)
+    values(#{ownerHouseId},#{userId},#{comment},NOW())
+  </insert>
+
+  <delete id="deleteByCommentId">
+    delete from comment
+    where com_id=#{commentId};
+  </delete>
+
+<!--  <delete id="deleteOwnerHouseId">-->
+<!--    delete from comment-->
+<!--    where owner_house_id=#{ownerHouseId};-->
+<!--  </delete>-->
+
+  <select id="getCommentIdsByInfoSquareId" resultType="java.lang.Integer">
+    select * from comment
+    where info_id=#{infoSquareId}
+  </select>
+
+  <select id="getCommentIdsByOwnerHouseId" resultType="java.lang.Integer">
+    select * from comment
+    where owner_house_id=#{ownerHouseId}
+  </select>
 </mapper>
