@@ -26,9 +26,13 @@ public class Feedback {
     @Column(name = "user_id")
     private Integer userId;
 
+    @ApiModelProperty(value = "用户IP")
+    @Column(name = "ip_address")
+    private String ipAddress;
+
     @ApiModelProperty(value = "反馈")
-    @Column(name = "feedback")
-    private String feedback;
+    @Column(name = "text")
+    private String text;
 
     @ApiModelProperty(value = "反馈时间")
     @Column(name = "date")

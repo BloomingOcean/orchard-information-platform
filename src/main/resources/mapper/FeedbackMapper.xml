@@ -7,7 +7,8 @@
     -->
     <id column="feedback_id" jdbcType="INTEGER" property="feedbackId" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
-    <result column="feedback" jdbcType="VARCHAR" property="feedback" />
+    <result column="ip_address" jdbcType="INTEGER" property="ipAddress" />
+    <result column="feedback" jdbcType="VARCHAR" property="text" />
     <result column="date" jdbcType="TIMESTAMP" property="date" />
   </resultMap>
 </mapper>
