@@ -8,14 +8,17 @@ import com.liyang.orchard.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.util.ByteSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -35,11 +38,11 @@ public class UserRealm extends AuthorizingRealm {
 	@SuppressWarnings("unchecked")
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
 		Session session = SecurityUtils.getSubject().getSession();
-		//查询用户的权限
+		// 查询用户的权限
 		JSONObject permission = (JSONObject) session.getAttribute(Constants.SESSION_USER_PERMISSION);
 		logger.info("permission的值为:" + permission);
 		logger.info("本用户权限为:" + permission.get("permissionList"));
-		//为当前用户设置角色和权限
+		// 为当前用户设置角色和权限
 		SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
 		authorizationInfo.addStringPermissions((Collection<String>) permission.get("permissionList"));
 		return authorizationInfo;
@@ -53,6 +56,7 @@ public class UserRealm extends AuthorizingRealm {
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken) throws AuthenticationException {
 		System.out.println("authcToken.getPrincipal:" + authcToken.getPrincipal());
 		String phone = (String) authcToken.getPrincipal();
+		authcToken.getCredentials();
 		// 获取电话和密码
 //		String password = new String((char[]) authcToken.getCredentials());
 		User user = userService.findByPhone(phone);
@@ -60,14 +64,21 @@ public class UserRealm extends AuthorizingRealm {
 			//没找到帐号
 			throw new UnknownAccountException();
 		}
-		//session中不需要保存密码
+		// session中不需要保存密码
 		JSONObject info = new JSONObject();
 		info.put("phone", user.getPhone());
 		info.put("nikename", user.getNickname());
-		//将用户信息放入session中
+		// 将用户信息放入session中
 		SecurityUtils.getSubject().getSession().setAttribute(Constants.SESSION_USER_INFO, info);
-		//交给AuthenticatingRealm使用CredentialsMatcher进行密码匹配
-		//ByteSource.Util.bytes("salt"), salt=username+salt,采用明文访问时，不需要此句
-		return new SimpleAuthenticationInfo(user.getPhone(),user.getPassword(),getName());
+		// 获取principal(UUID),hashedCredentials(凭证)
+		Object principal = user.getPhone();
+		Object hashedCredentials = user.getPassword();
+		// 盐值
+		ByteSource salt = ByteSource.Util.bytes("orchard");
+		System.out.println("salt:" + salt);
+		// 交给AuthenticatingRealm使用CredentialsMatcher进行密码匹配
+		return new SimpleAuthenticationInfo(principal,hashedCredentials,salt,getName());
 	}
 }
+
+

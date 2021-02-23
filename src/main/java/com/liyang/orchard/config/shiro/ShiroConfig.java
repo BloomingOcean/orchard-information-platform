@@ -104,6 +104,8 @@ public class ShiroConfig {
 	@Bean
 	public UserRealm userRealm() {
 		UserRealm userRealm = new UserRealm();
+		// 配置注册 加密 （在加密后，不配置的话会导致登陆密码失败）
+		userRealm.setCredentialsMatcher(hashedCredentialsMatcher());
 		return userRealm;
 	}
 

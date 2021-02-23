@@ -7,16 +7,16 @@ public class MD5Utils {
         return DigestUtils.md5Hex(src);
     }
 
-    // 固定盐值e28d
-    private static final String salt = "e52d78a4a598edd6";
+    // 固定盐值
+    private static final String salt = "b3JjaGFyZA==";
 
     public static String inputPassToFormPass(String inputPass) {
-        String str = "" + salt.charAt(0) + salt.charAt(2) + inputPass + salt.charAt(5) + salt.charAt(4);
+        String str = inputPass + salt;
         return md5(str);
     }
 
     public static String formPassToDBPass(String formPass, String salt) {
-        String str = "" + salt.charAt(0) + salt.charAt(2) + formPass + salt.charAt(5) + salt.charAt(4);
+        String str = formPass  + salt;
         return md5(str);
     }
 

@@ -17,6 +17,8 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.crypto.SecureRandomNumberGenerator;
+import org.apache.shiro.crypto.hash.Md5Hash;
 import org.apache.shiro.subject.Subject;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,8 +49,13 @@ public class LoginRegisterController {
     @ApiOperation(value = "注册")
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public Result register(@RequestBody User user){
+        //生成盐值
+//        String salt = new SecureRandomNumberGenerator().nextBytes().toHex();
         // 调用MD5工具类进行加密
-        user.setPassword(MD5Utils.inputPassToFormPass(user.getPassword()));
+//        user.setPassword(MD5Utils.inputPassToFormPass(user.getPassword()));
+        //生成的密文
+        String ciphertext = new Md5Hash(user.getPassword(),"orchard",2).toString();
+        user.setPassword(ciphertext);
         // 添加注册用户
         userService.save(user);
         return ResultGenerator.genSuccessResult();
@@ -145,7 +152,7 @@ public class LoginRegisterController {
     }
 
     @ApiOperation(value = "短信验证码-发送服务")
-    @RequestMapping(value = "/SMS",method = RequestMethod.GET)
+    @RequestMapping(value = "/SMS",method = RequestMethod.POST)
     public Result sendSms(@RequestParam(value = "phone")String phone){
         if(smsService.sendSms(phone)){
             return ResultGenerator.genSuccessResult();

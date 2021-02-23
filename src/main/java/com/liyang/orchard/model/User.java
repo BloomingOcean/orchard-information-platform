@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import java.util.Date;
 import javax.persistence.*;
@@ -64,5 +65,5 @@ public class User {
 
     @ApiModelProperty(value = "用户角色id")
     @Column(name = "role_id")
-    private String roleId;
+    private Integer roleId;
 }
