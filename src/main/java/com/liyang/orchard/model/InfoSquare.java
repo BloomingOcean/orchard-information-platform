@@ -79,4 +79,7 @@ public class InfoSquare {
     @Column(name = "tags")
     private String tags;
 
+    @ApiModelProperty(value = "富文本")
+    @Column(name = "rich_text")
+    private String richText;
 }

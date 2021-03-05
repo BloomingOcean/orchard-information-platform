@@ -30,4 +30,6 @@ public interface InfoSquareService extends Service<InfoSquare> {
     InfoSquare selectInfoSquareAllById(Integer infoId);
 
     Result updateInfoSquare(UpdateInfoSquare updateInfoSquare);
+    
+    List<SearchInfoSquare> searchInfoSquare(String queryText, Integer infoType);
 }

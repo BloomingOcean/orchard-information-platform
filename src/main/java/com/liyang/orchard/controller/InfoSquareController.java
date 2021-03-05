@@ -7,9 +7,11 @@ import com.liyang.orchard.service.InfoSquareService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiOperation;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -128,8 +130,19 @@ public class InfoSquareController {
 
     @ApiOperation(value = "查询 某信息id所有字段(包括img)")
     @RequestMapping(value = "/sebyid", method = RequestMethod.GET)
-    public Result update(@RequestParam("infoId") Integer infoId) {
+    public Result sebyid(@RequestParam("infoId") Integer infoId) {
         InfoSquare infoSquare = infoSquareService.selectInfoSquareAllById(infoId);
         return ResultGenerator.genSuccessResult(infoSquare);
     }
+
+    @ApiOperation(value = "搜索")
+    @RequestMapping(value = "/search", method = RequestMethod.GET)
+    public Result search(@ApiParam(value = "queryText", required=true) @RequestParam("queryText") String queryText,
+                         @ApiParam(value = "infoType", required=true) @RequestParam("infoType") Integer infoType) {
+        List<SearchInfoSquare> searchResult = infoSquareService.searchInfoSquare(queryText, infoType);
+        if (searchResult.size() == 0)
+            return ResultGenerator.genFailResult("未查询到所需数据！");
+        return ResultGenerator.genSuccessResult(searchResult);
+    }
+
 }

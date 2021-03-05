@@ -18,6 +18,7 @@
     <result column="info_type_id" jdbcType="INTEGER" property="infoTypeId" />
     <result column="release_date" jdbcType="TIMESTAMP" property="releaseDate" />
     <result column="tags" jdbcType="VARCHAR" property="tags" />
+    <result column="rich_text" jdbcType="VARCHAR" property="richText" />
     <collection property="imgList" ofType="com.liyang.orchard.model.ImgList">
       <result property="imgId" column="img_id"/>
       <result property="infoSquareId" column="info_square_id"/>
@@ -26,21 +27,39 @@
     </collection>
   </resultMap>
 
-    <resultMap id="PaginationInfoSquareMap" type="com.liyang.orchard.model.infosquare.PaginationInfoSquare">
-      <id column="info_id" jdbcType="INTEGER" property="infoId" />
-      <result column="user_id" jdbcType="INTEGER" property="userId" />
-      <result column="title" jdbcType="VARCHAR" property="title" />
-      <result column="description" jdbcType="VARCHAR" property="description" />
-      <result column="phone" jdbcType="VARCHAR" property="phone" />
-      <result column="info_type_id" jdbcType="INTEGER" property="infoTypeId" />
-      <result column="tags" jdbcType="VARCHAR" property="tags" />
-      <collection property="imgList" ofType="com.liyang.orchard.model.ImgList">
-        <result property="imgId" column="img_id"/>
-        <result property="infoSquareId" column="info_square_id"/>
-        <result property="ownerHouseId" column="owner_house_id"/>
-        <result property="imgUrl" column="img_url"/>
-      </collection>
-    </resultMap>
+  <resultMap id="PaginationInfoSquareMap" type="com.liyang.orchard.model.infosquare.PaginationInfoSquare">
+    <id column="info_id" jdbcType="INTEGER" property="infoId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="info_type_id" jdbcType="INTEGER" property="infoTypeId" />
+    <result column="tags" jdbcType="VARCHAR" property="tags" />
+    <result column="rich_text" jdbcType="VARCHAR" property="richText" />
+    <collection property="imgList" ofType="com.liyang.orchard.model.ImgList">
+      <result property="imgId" column="img_id"/>
+      <result property="infoSquareId" column="info_square_id"/>
+      <result property="ownerHouseId" column="owner_house_id"/>
+      <result property="imgUrl" column="img_url"/>
+    </collection>
+  </resultMap>
+
+  <resultMap id="SearchInfoSquareMap" type="com.liyang.orchard.model.infosquare.SearchInfoSquare">
+    <id column="info_id" jdbcType="INTEGER" property="infoId" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+<!--    <result column="nikename" jdbcType="VARCHAR" property="userNikename" />-->
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="info_type_id" jdbcType="INTEGER" property="infoTypeId" />
+    <result column="tags" jdbcType="VARCHAR" property="tags" />
+    <result column="rich_text" jdbcType="VARCHAR" property="richText" />
+    <collection property="imgList" ofType="com.liyang.orchard.model.ImgList">
+      <result property="imgId" column="img_id"/>
+      <result property="infoSquareId" column="info_square_id"/>
+      <result property="ownerHouseId" column="owner_house_id"/>
+      <result property="imgUrl" column="img_url"/>
+    </collection>
+  </resultMap>
 
   <select id="getInfoById" resultMap="BaseResultMap">
     select * from info_square
@@ -100,9 +119,22 @@
     </where>
   </update>
 
-  <select id="SearchInfoSquare">
+  <select id="searchInfoSquareByPiece" resultMap="SearchInfoSquareMap">
     SELECT * FROM info_square
-    WHERE tags LIKE '%文学%'
+    WHERE tags LIKE concat('%',#{queryText},'%')
   </select>
 
+  <select id="searchInfoSquareByType" resultMap="SearchInfoSquareMap">
+    SELECT * FROM info_square
+    WHERE tags LIKE concat('%',#{queryText},'%')
+    AND info_type_id=#{infoType};
+  </select>
+
+  <select id="searchAllInfoSquareByType" resultMap="SearchInfoSquareMap">
+    SELECT * FROM info_square where info_type_id=#{infoType};
+  </select>
+
+  <select id="searchAllInfoSquare" resultMap="SearchInfoSquareMap">
+    SELECT * FROM info_square;
+  </select>
 </mapper>

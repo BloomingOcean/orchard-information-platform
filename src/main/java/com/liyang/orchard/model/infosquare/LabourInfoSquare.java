@@ -60,4 +60,8 @@ public class LabourInfoSquare {
     @ApiModelProperty(value = "信息标签")
     @Column(name = "tags")
     private String tags;
+
+    @ApiModelProperty(value = "富文本")
+    @Column(name = "rich_text")
+    private String richText;
 }

@@ -13,13 +13,17 @@ public interface InfoSquareMapper extends Mapper<InfoSquare> {
 
     InfoSquare getInfoById(@Param("infoId") Integer infoId);
 
-    Integer insertBuyInfoSquare(@Param("BIS") BuyInfoSquare buyInfoSquare,@Param("name") String name);
+    Integer insertBuyInfoSquare(@Param("BIS") BuyInfoSquare buyInfoSquare,
+                                @Param("name") String name);
 
-    Integer insertSupplyInfoSquare(@Param("SIS")SupplyInfoSquare supplyInfoSquare,@Param("name") String name);
+    Integer insertSupplyInfoSquare(@Param("SIS")SupplyInfoSquare supplyInfoSquare,
+                                   @Param("name") String name);
 
-    Integer insertLabourInfoSquare(@Param("LaIS")LabourInfoSquare labourInfoSquare,@Param("name") String name);
+    Integer insertLabourInfoSquare(@Param("LaIS")LabourInfoSquare labourInfoSquare,
+                                   @Param("name") String name);
 
-    Integer insertLeaseInfoSquare(@Param("LeIS")LeaseInfoSquare leaseInfoSquare,@Param("name") String name);
+    Integer insertLeaseInfoSquare(@Param("LeIS")LeaseInfoSquare leaseInfoSquare,
+                                  @Param("name") String name);
 
     Integer insertTransferInfoSquare(@Param("TIS")TransferInfoSquare transferInfoSquare,@Param("name") String name);
 
@@ -27,5 +31,15 @@ public interface InfoSquareMapper extends Mapper<InfoSquare> {
 
     InfoSquare selectInfoSquareAllById(@Param("infoId") Integer infoId);
 
-    void updateInfoSquare(@Param("UIQ")UpdateInfoSquare updateInfoSquare, @Param("name") String name);
+    void updateInfoSquare(@Param("UIQ")UpdateInfoSquare updateInfoSquare,
+                          @Param("name") String name);
+
+    List<SearchInfoSquare> searchInfoSquareByPiece(@Param("queryText") String queryText);
+
+    List<SearchInfoSquare> searchInfoSquareByType(@Param("queryText") String queryText,
+                                                  @Param("infoType") Integer infoType);
+
+    List<SearchInfoSquare> searchAllInfoSquareByType(@Param("infoType") Integer infoType);
+
+    List<SearchInfoSquare> searchAllInfoSquare();
 }

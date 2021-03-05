@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class InfoSquareServiceImpl extends AbstractService<InfoSquare> implement
     private ImgListService imgListService;
 
     @Override
-    public void deleteById(Integer infoSquareId){
+    public void deleteById(Integer infoSquareId) {
         mapper.deleteByPrimaryKey(infoSquareId);
         imgListService.deleteByInfoSquareId(infoSquareId);
     }
@@ -52,13 +53,15 @@ public class InfoSquareServiceImpl extends AbstractService<InfoSquare> implement
         detailsInfoSquare.setVideoUrl(infoSquare.getVideoUrl());
         detailsInfoSquare.setInfoTypeId(infoSquare.getInfoTypeId());
         detailsInfoSquare.setTags(infoSquare.getTags());
+        detailsInfoSquare.setRichText(infoSquare.getRichText());
         // nickname
         User user = userMapper.findByPhone(infoSquare.getPhone());
         detailsInfoSquare.setUserNikename(user.getNickname());
         // 图片List赋值
         List<String> imgList = new LinkedList<>();
-        for (ImgList Temp: imgListService.selectByInfoSquareId(infoSquare.getInfoId())
-        ) {imgList.add(Temp.getImgUrl());
+        for (ImgList Temp : imgListService.selectByInfoSquareId(infoSquare.getInfoId())
+        ) {
+            imgList.add(Temp.getImgUrl());
         }
         detailsInfoSquare.setImgList(imgList);
         return detailsInfoSquare;
@@ -66,17 +69,18 @@ public class InfoSquareServiceImpl extends AbstractService<InfoSquare> implement
 
     /**
      * useGeneratedKeys返回的是0或1，id的值会返回到参数实体的id里面去
+     *
      * @param buyInfoSquare
      */
     @Override
-    public void insertBuyInfoSquare(BuyInfoSquare buyInfoSquare){
+    public void insertBuyInfoSquare(BuyInfoSquare buyInfoSquare) {
         String name = userMapper.selectByPrimaryKey(buyInfoSquare.getUserId()).getName();
         infoSquareMapper.insertBuyInfoSquare(buyInfoSquare, name);
         // 获得返回给参数的UserId的值
         Integer idKey = buyInfoSquare.getInfoId();
         // 图片List存储
         List<String> imgList = new LinkedList<>();
-        for (String newImgUrl: buyInfoSquare.getImgList()
+        for (String newImgUrl : buyInfoSquare.getImgList()
         ) {
             imgListService.save(ImgList.builder().infoSquareId(idKey).imgUrl(newImgUrl).build());
         }
@@ -90,7 +94,7 @@ public class InfoSquareServiceImpl extends AbstractService<InfoSquare> implement
         Integer idKey = supplyInfoSquare.getInfoId();
         // 图片List存储
         List<String> imgList = new LinkedList<>();
-        for (String newImgUrl: supplyInfoSquare.getImgList()
+        for (String newImgUrl : supplyInfoSquare.getImgList()
         ) {
             imgListService.save(ImgList.builder().infoSquareId(idKey).imgUrl(newImgUrl).build());
         }
@@ -104,7 +108,7 @@ public class InfoSquareServiceImpl extends AbstractService<InfoSquare> implement
         Integer idKey = labourInfoSquare.getInfoId();
         // 图片List存储
         List<String> imgList = new LinkedList<>();
-        for (String newImgUrl: labourInfoSquare.getImgList()
+        for (String newImgUrl : labourInfoSquare.getImgList()
         ) {
             imgListService.save(ImgList.builder().infoSquareId(idKey).imgUrl(newImgUrl).build());
         }
@@ -118,7 +122,7 @@ public class InfoSquareServiceImpl extends AbstractService<InfoSquare> implement
         Integer idKey = leaseInfoSquare.getInfoId();
         // 图片List存储
         List<String> imgList = new LinkedList<>();
-        for (String newImgUrl: leaseInfoSquare.getImgList()
+        for (String newImgUrl : leaseInfoSquare.getImgList()
         ) {
             imgListService.save(ImgList.builder().infoSquareId(idKey).imgUrl(newImgUrl).build());
         }
@@ -132,7 +136,7 @@ public class InfoSquareServiceImpl extends AbstractService<InfoSquare> implement
         Integer idKey = transferInfoSquare.getInfoId();
         // 图片List存储
         List<String> imgList = new LinkedList<>();
-        for (String newImgUrl: transferInfoSquare.getImgList()
+        for (String newImgUrl : transferInfoSquare.getImgList()
         ) {
             imgListService.save(ImgList.builder().infoSquareId(idKey).imgUrl(newImgUrl).build());
         }
@@ -165,16 +169,16 @@ public class InfoSquareServiceImpl extends AbstractService<InfoSquare> implement
     }
 
     public Result updateInfoSquare(UpdateInfoSquare updateInfoSquare) {
-        try{
+        try {
             // 更新info_square表的数据
             String name = userMapper.selectByPrimaryKey(updateInfoSquare.getUserId()).getName();
             infoSquareMapper.updateInfoSquare(updateInfoSquare, name);
-        }catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             e.printStackTrace();
             return ResultGenerator.genFailResult("无此用户");
         }
         Integer infoSquareId = updateInfoSquare.getInfoId();
-        System.out.println("infoSquareId:"+infoSquareId);
+        System.out.println("infoSquareId:" + infoSquareId);
         // 删除imgList原先图片
         imgListService.deleteByInfoSquareId(infoSquareId);
         // 更新imgList表数据
@@ -184,10 +188,31 @@ public class InfoSquareServiceImpl extends AbstractService<InfoSquare> implement
 //            imgListService.save(ImgList.builder().infoSquareId(infoSquareId).imgUrl(newImgUrl).build());
 //        }
         List<String> imgList = new LinkedList<>();
-        for (String newUrl: updateInfoSquare.getImgList()
+        for (String newUrl : updateInfoSquare.getImgList()
         ) {
             imgListService.save(ImgList.builder().infoSquareId(infoSquareId).imgUrl(newUrl).build());
         }
         return ResultGenerator.genSuccessResult();
+    }
+
+    @Override
+    public List<SearchInfoSquare> searchInfoSquare(String queryText, Integer infoType) {
+        String[] spString = queryText.split("\\s+");
+        List<SearchInfoSquare> searchList = new ArrayList<>();
+        if(queryText.equals("\"\"") && infoType == 0) {
+            searchList.addAll(infoSquareMapper.searchAllInfoSquare());
+            return searchList;
+        }else if (queryText.equals("\"\"") && (infoType == 1 || infoType == 2 || infoType == 3 || infoType == 4)) {
+            searchList.addAll(infoSquareMapper.searchAllInfoSquareByType(infoType));
+        }else if (!queryText.equals("\"\"") && infoType == 0) {
+            for (String queryTextPiece : spString) {
+                searchList.addAll(infoSquareMapper.searchInfoSquareByPiece(queryTextPiece));
+            }
+        }else if (!queryText.equals("\"\"") && (infoType == 1 || infoType == 2 || infoType == 3 || infoType == 4)) {
+            for (String queryTextPiece : spString) {
+                searchList.addAll(infoSquareMapper.searchInfoSquareByType(queryTextPiece, infoType));
+            }
+        }
+        return searchList;
     }
 }
