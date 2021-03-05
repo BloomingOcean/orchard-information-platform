@@ -9,6 +9,7 @@ import com.liyang.orchard.model.ImgList;
 import com.liyang.orchard.model.InfoSquare;
 import com.liyang.orchard.model.User;
 import com.liyang.orchard.model.infosquare.*;
+import com.liyang.orchard.model.infosquare.vo.MyInfoSquare;
 import com.liyang.orchard.service.ImgListService;
 import com.liyang.orchard.service.InfoSquareService;
 import com.liyang.orchard.core.AbstractService;
@@ -35,6 +36,12 @@ public class InfoSquareServiceImpl extends AbstractService<InfoSquare> implement
 
     @Resource
     private ImgListService imgListService;
+
+    @Resource
+    private ImgListMapper imgListMapper;
+
+    @Resource
+    private InfoSquareService infoSquareService;
 
     @Override
     public void deleteById(Integer infoSquareId) {
@@ -143,24 +150,31 @@ public class InfoSquareServiceImpl extends AbstractService<InfoSquare> implement
     }
 
     @Override
-    public List<PaginationInfoSquare> selectMyInfoSquareList(Integer userId) {
-//        List<String> imgList = new LinkedList<>();
-        List<PaginationInfoSquare> list = infoSquareMapper.selectMyInfoSquareList(userId);
-        // for循环赋值（效率不高）
-        //        for (int i = 0; i < list.size(); i++) {
-//            Integer infoId = list.get(i).getInfoId();
-//            System.out.println("infoId:"+infoId);
-//            List<ImgList> imgLists = imgListMapper.selectByInfoSquareId(infoId);
-//            List<String> imgList = new LinkedList<>();
+    public List<MyInfoSquare> selectMyInfoSquareList(Integer userId) {
+        // 这是原来的方法
+//        List<PaginationInfoSquare> list = infoSquareMapper.selectMyInfoSquareList(userId);
+//        System.out.println("infoSquareMapper->list:"+list);
+
+        List<MyInfoSquare> myInfoSquareList = infoSquareMapper.selectMyInfoSquareListWithoutImg(userId);
+        for (MyInfoSquare myInfoSquare : myInfoSquareList) {
+            List<ImgList> imgLists = imgListService.selectByInfoSquareId(myInfoSquare.getInfoId());
+            List<String> imgList = new ArrayList<>();
+            for (ImgList imgObject : imgLists) {
+                imgList.add(imgObject.getImgUrl());
+                myInfoSquare.setImgList(imgList);
+            }
+        }
+//        for (int i = 0; i < myInfoSquareList.size(); i++) {
+//            MyInfoSquare myInfoSquare = myInfoSquareList.get(i);
+//            Integer infoID = myInfoSquare.getInfoId();
+//            List<ImgList> imgLists = imgListService.selectByInfoSquareId(infoID);
 //            for (int i1 = 0; i1 < imgLists.size(); i1++) {
-//                imgList.add(imgLists.get(i1).getImgUrl());
+//                ImgList imgObject = imgLists.get(i1);
+//                String imgUrl = imgObject.getImgUrl();
+//                myInfoSquare.getImgList().add(imgUrl);
 //            }
-//            System.out.println("imgList:"+imgList);
-//            List<String> imgList2 = imgList;
-//            list.get(i).setImgList(imgList2);
-//            imgList.clear();
 //        }
-        return list;
+        return myInfoSquareList;
     }
 
     @Override

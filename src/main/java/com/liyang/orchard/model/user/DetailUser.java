@@ -61,4 +61,5 @@ public class DetailUser {
     @ApiModelProperty(value = "用户角色id")
     @Column(name = "role_id")
     private Integer roleId;
+
 }

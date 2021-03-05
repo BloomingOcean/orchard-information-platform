@@ -3,6 +3,7 @@ package com.liyang.orchard.dao;
 import com.liyang.orchard.core.Mapper;
 import com.liyang.orchard.model.InfoSquare;
 import com.liyang.orchard.model.infosquare.*;
+import com.liyang.orchard.model.infosquare.vo.MyInfoSquare;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
@@ -29,10 +30,16 @@ public interface InfoSquareMapper extends Mapper<InfoSquare> {
 
     List<PaginationInfoSquare> selectMyInfoSquareList(@Param("userId") Integer userId);
 
+    List<MyInfoSquare>selectMyInfoSquareListWithoutImg(@Param("userId") Integer userId);
+
+
+
+
     InfoSquare selectInfoSquareAllById(@Param("infoId") Integer infoId);
 
     void updateInfoSquare(@Param("UIQ")UpdateInfoSquare updateInfoSquare,
                           @Param("name") String name);
+
 
     List<SearchInfoSquare> searchInfoSquareByPiece(@Param("queryText") String queryText);
 

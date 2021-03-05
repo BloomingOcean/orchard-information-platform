@@ -3,6 +3,7 @@ import com.liyang.orchard.core.Result;
 import com.liyang.orchard.core.ResultGenerator;
 import com.liyang.orchard.model.InfoSquare;
 import com.liyang.orchard.model.infosquare.*;
+import com.liyang.orchard.model.infosquare.vo.MyInfoSquare;
 import com.liyang.orchard.service.InfoSquareService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -116,7 +117,8 @@ public class InfoSquareController {
                          @ApiParam("每页展示数量") @RequestParam(defaultValue = "0") Integer size,
                          @ApiParam("用户id") @RequestParam(defaultValue = "0") Integer userId) {
         PageHelper.startPage(page, size);
-        List<PaginationInfoSquare> list = infoSquareService.selectMyInfoSquareList(userId);
+        List<MyInfoSquare> list = infoSquareService.selectMyInfoSquareList(userId);
+
         System.out.println("list.size()" + list.size());
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);

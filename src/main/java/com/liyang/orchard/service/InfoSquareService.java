@@ -3,6 +3,7 @@ import com.liyang.orchard.core.Result;
 import com.liyang.orchard.model.InfoSquare;
 import com.liyang.orchard.core.Service;
 import com.liyang.orchard.model.infosquare.*;
+import com.liyang.orchard.model.infosquare.vo.MyInfoSquare;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public interface InfoSquareService extends Service<InfoSquare> {
 
     void insertTransferInfoSquare(TransferInfoSquare transferInfoSquare);
 
-    List<PaginationInfoSquare> selectMyInfoSquareList(Integer userId);
+    List<MyInfoSquare> selectMyInfoSquareList(Integer userId);
 
     InfoSquare selectInfoSquareAllById(Integer infoId);
 
