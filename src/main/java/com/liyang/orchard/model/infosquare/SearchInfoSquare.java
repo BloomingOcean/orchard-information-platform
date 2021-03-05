@@ -16,8 +16,8 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "信息广场-发布租赁")
-public class LeaseInfoSquare {
+@ApiModel(value = "信息广场-搜索")
+public class SearchInfoSquare {
 
     @JsonIgnore
     @Id
@@ -26,9 +26,9 @@ public class LeaseInfoSquare {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer infoId;
 
-    @ApiModelProperty(value = "用户ID")
-    @Column(name = "user_id")
-    private Integer userId;
+//    @ApiModelProperty(value = "用户ID")
+//    @Column(name = "user_id")
+//    private Integer userId;
 
     @ApiModelProperty(value = "标题")
     @Column(name = "title")
@@ -38,9 +38,13 @@ public class LeaseInfoSquare {
     @Column(name = "description")
     private String description;
 
-    @ApiModelProperty(value = "地址")
-    @Column(name = "address")
-    private String address;
+//    @ApiModelProperty(value = "地址")
+//    @Column(name = "address")
+//    private String address;
+
+//    @ApiModelProperty(value = "联系人")
+//    @Column(name = "name")
+//    private String name;
 
     @ApiModelProperty(value = "昵称")
     @Column(name = "nikename")
@@ -50,8 +54,20 @@ public class LeaseInfoSquare {
     @Column(name = "phone")
     private String phone;
 
-    @ApiModelProperty(value = "图片列表")
-    private List<String> imgList;
+    @ApiModelProperty(value = "信息类型")
+    @Column(name = "info_type_id")
+    private Integer infoTypeId;
+
+//    @ApiModelProperty(value = "视频源")
+//    @Column(name = "video_url")
+//    private String videoUrl;
+
+//    @ApiModelProperty(value = "图片列表")
+//    private List<String> imgList;
+
+//    @ApiModelProperty(value = "求购重量")
+//    @Column(name = "buy_weight")
+//    private String buyWeight;
 
     @ApiModelProperty(value = "信息标签")
     @Column(name = "tags")

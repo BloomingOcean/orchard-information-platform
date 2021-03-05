@@ -68,4 +68,8 @@ public class BuyInfoSquare {
     @ApiModelProperty(value = "求购重量")
     @Column(name = "buy_weight")
     private String buyWeight;
+
+    @ApiModelProperty(value = "信息标签")
+    @Column(name = "tags")
+    private String tags;
 }

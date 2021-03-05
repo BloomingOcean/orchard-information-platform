@@ -29,5 +29,5 @@ public interface InfoSquareService extends Service<InfoSquare> {
 
     InfoSquare selectInfoSquareAllById(Integer infoId);
 
-    Result updateInfoSquare(InfoSquare infoSquare);
+    Result updateInfoSquare(UpdateInfoSquare updateInfoSquare);
 }

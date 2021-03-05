@@ -56,4 +56,8 @@ public class LabourInfoSquare {
 
     @ApiModelProperty(value = "图片列表")
     private List<String> imgList;
+
+    @ApiModelProperty(value = "信息标签")
+    @Column(name = "tags")
+    private String tags;
 }

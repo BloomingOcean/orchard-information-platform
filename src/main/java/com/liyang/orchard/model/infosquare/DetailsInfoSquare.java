@@ -76,4 +76,8 @@ public class DetailsInfoSquare {
 //    @ApiModelProperty(value = "发布时间")
 //    @Column(name = "release_date")
 //    private Date releaseDate;
+
+    @ApiModelProperty(value = "信息标题")
+    @Column(name = "tags")
+    private String tags;
 }

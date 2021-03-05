@@ -36,7 +36,7 @@ public class InfoSquareController {
 //        return ResultGenerator.genSuccessResult();
 //    }
 
-    @ApiOperation(value = "删除我发布的信息")
+    @ApiOperation(value = "删除 我发布的信息")
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
     public Result delete(@ApiParam("信息id") @RequestParam Integer id) {
         infoSquareService.deleteById(id);
@@ -50,12 +50,12 @@ public class InfoSquareController {
 //        return ResultGenerator.genSuccessResult();
 //    }
 
-    @ApiOperation(value = "根据id查询-信息广场")
-    @RequestMapping(value = "/sebyid", method = RequestMethod.GET)
-    public Result detail(@ApiParam("信息Id") @RequestParam Integer id) {
-        InfoSquare infoSquare = infoSquareService.findById(id);
-        return ResultGenerator.genSuccessResult(infoSquare);
-    }
+//    @ApiOperation(value = "根据id查询信息所有字段")
+//    @RequestMapping(value = "/sebyid", method = RequestMethod.GET)
+//    public Result detail(@ApiParam("信息Id") @RequestParam Integer id) {
+//        InfoSquare infoSquare = infoSquareService.findById(id);
+//        return ResultGenerator.genSuccessResult(infoSquare);
+//    }
 
     @ApiOperation(value = "分页查询")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
@@ -115,20 +115,21 @@ public class InfoSquareController {
                          @ApiParam("用户id") @RequestParam(defaultValue = "0") Integer userId) {
         PageHelper.startPage(page, size);
         List<PaginationInfoSquare> list = infoSquareService.selectMyInfoSquareList(userId);
+        System.out.println("list.size()" + list.size());
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 
     @ApiOperation(value = "修改 发布的信息")
-    @RequestMapping(value = "/update", method = RequestMethod.GET)
-    public Result update(@RequestBody InfoSquare infoSquare) {
-        return infoSquareService.updateInfoSquare(infoSquare);
+    @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    public Result update(@RequestBody UpdateInfoSquare updateInfoSquare) {
+        return infoSquareService.updateInfoSquare(updateInfoSquare);
     }
 
-    @ApiOperation(value = "查询 信息")
-    @RequestMapping(value = "/sebyid", method = RequestMethod.POST)
+    @ApiOperation(value = "查询 某信息id所有字段(包括img)")
+    @RequestMapping(value = "/sebyid", method = RequestMethod.GET)
     public Result update(@RequestParam("infoId") Integer infoId) {
-        infoSquareService.selectInfoSquareAllById(infoId);
-        return ResultGenerator.genSuccessResult();
+        InfoSquare infoSquare = infoSquareService.selectInfoSquareAllById(infoId);
+        return ResultGenerator.genSuccessResult(infoSquare);
     }
 }

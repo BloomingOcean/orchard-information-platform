@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "信息广场-发布租赁")
+@ApiModel(value = "信息广场-分页")
 public class PaginationInfoSquare {
 
     @Id
@@ -73,4 +73,8 @@ public class PaginationInfoSquare {
 //    @ApiModelProperty(value = "发布时间")
 //    @Column(name = "release_date")
 //    private Date releaseDate;
+
+    @ApiModelProperty(value = "信息标签")
+    @Column(name = "tags")
+    private String tags;
 }

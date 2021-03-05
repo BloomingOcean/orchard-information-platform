@@ -27,5 +27,5 @@ public interface InfoSquareMapper extends Mapper<InfoSquare> {
 
     InfoSquare selectInfoSquareAllById(@Param("infoId") Integer infoId);
 
-    void updateInfoSquare(@Param("UIQ")InfoSquare infoSquare, @Param("name") String name);
+    void updateInfoSquare(@Param("UIQ")UpdateInfoSquare updateInfoSquare, @Param("name") String name);
 }

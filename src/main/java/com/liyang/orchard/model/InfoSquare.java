@@ -53,7 +53,7 @@ public class InfoSquare {
 
     @ApiModelProperty(value = "图片地址列表")
     @Transient
-    private List<String> imgList;
+    private List<ImgList> imgList;
 
     @ApiModelProperty(value = "视频源")
     @Column(name = "video_url")
@@ -74,5 +74,9 @@ public class InfoSquare {
     @ApiModelProperty(value = "发布时间")
     @Column(name = "release_date")
     private Date releaseDate;
+
+    @ApiModelProperty(value = "信息标签")
+    @Column(name = "tags")
+    private String tags;
 
 }

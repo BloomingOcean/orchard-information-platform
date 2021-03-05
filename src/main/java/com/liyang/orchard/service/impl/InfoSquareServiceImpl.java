@@ -51,6 +51,7 @@ public class InfoSquareServiceImpl extends AbstractService<InfoSquare> implement
         detailsInfoSquare.setDescription(infoSquare.getDescription());
         detailsInfoSquare.setVideoUrl(infoSquare.getVideoUrl());
         detailsInfoSquare.setInfoTypeId(infoSquare.getInfoTypeId());
+        detailsInfoSquare.setTags(infoSquare.getTags());
         // nickname
         User user = userMapper.findByPhone(infoSquare.getPhone());
         detailsInfoSquare.setUserNikename(user.getNickname());
@@ -163,24 +164,29 @@ public class InfoSquareServiceImpl extends AbstractService<InfoSquare> implement
         return infoSquareMapper.selectInfoSquareAllById(infoId);
     }
 
-    public Result updateInfoSquare(InfoSquare infoSquare) {
+    public Result updateInfoSquare(UpdateInfoSquare updateInfoSquare) {
         try{
             // 更新info_square表的数据
-            String name = userMapper.selectByPrimaryKey(infoSquare.getUserId()).getName();
-            infoSquareMapper.updateInfoSquare(infoSquare, name);
+            String name = userMapper.selectByPrimaryKey(updateInfoSquare.getUserId()).getName();
+            infoSquareMapper.updateInfoSquare(updateInfoSquare, name);
         }catch (NullPointerException e) {
             e.printStackTrace();
             return ResultGenerator.genFailResult("无此用户");
         }
-        Integer infoSquareId = infoSquare.getInfoId();
+        Integer infoSquareId = updateInfoSquare.getInfoId();
         System.out.println("infoSquareId:"+infoSquareId);
         // 删除imgList原先图片
         imgListService.deleteByInfoSquareId(infoSquareId);
         // 更新imgList表数据
+//        List<String> imgList = new LinkedList<>();
+//        for (String newImgUrl: infoSquare.getImgList()
+//        ) {
+//            imgListService.save(ImgList.builder().infoSquareId(infoSquareId).imgUrl(newImgUrl).build());
+//        }
         List<String> imgList = new LinkedList<>();
-        for (String newImgUrl: infoSquare.getImgList()
+        for (String newUrl: updateInfoSquare.getImgList()
         ) {
-            imgListService.save(ImgList.builder().infoSquareId(infoSquareId).imgUrl(newImgUrl).build());
+            imgListService.save(ImgList.builder().infoSquareId(infoSquareId).imgUrl(newUrl).build());
         }
         return ResultGenerator.genSuccessResult();
     }
