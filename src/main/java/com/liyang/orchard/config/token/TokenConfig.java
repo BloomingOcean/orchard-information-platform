@@ -1,5 +1,6 @@
 package com.liyang.orchard.config.token;
 
+import net.bytebuddy.asm.Advice;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -8,10 +9,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 @Configuration
 public class TokenConfig extends WebMvcConfigurerAdapter {
-    @Bean
-    public TokenInterceptor tokenInterceptor() {
-        return new TokenInterceptor();
-    }
+//    @Bean
+//    public TokenInterceptor tokenInterceptor() {
+//        return new TokenInterceptor();
+//    }
 
 //    @Override
 //    public void addInterceptors(InterceptorRegistry registry) {
@@ -23,9 +24,9 @@ public class TokenConfig extends WebMvcConfigurerAdapter {
 //                        "/SMSCallback","/SMS","/login","/register");
 //    }
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/static/**")
-                .addResourceLocations("classpath:/static/");
-    }
+//    @Override
+//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+//        registry.addResourceHandler("/static/**")
+//                .addResourceLocations("classpath:/static/");
+//    }
 }
