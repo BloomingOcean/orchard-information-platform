@@ -49,6 +49,14 @@
     <result column="user_description" jdbcType="VARCHAR" property="userDescription" />
   </resultMap>
 
+  <resultMap id="AuthoritySysUser" type="com.liyang.orchard.config.shiro.SysUser">
+    <id column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="name" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="permission_code" jdbcType="VARCHAR" property="userPermission" />
+    <result column="role_name" jdbcType="VARCHAR" property="userRole" />
+  </resultMap>
+
   <select id="getSimpleUserInfo" resultMap="SimpleUser">
     select user_id,nickname,user_description,portrait_url
     from user
@@ -72,5 +80,13 @@
     <where>
       user_id = #{updateUser.userId}
     </where>
+  </select>
+
+  <select id="findUserAuthority" resultMap="AuthoritySysUser" >
+    SELECT user_id,`password`,`name`,role_name,permission_code FROM `user` INNER JOIN
+    (SELECT sr.role_id,role_name,permission_code FROM sys_role_permission srp,sys_role sr,sys_permission sp
+     WHERE srp.role_id=sr.role_id AND srp.permission_id=sp.permission_id) AS rp
+    ON `user`.role_id=rp.role_id
+    WHERE phone=#{userPhone}
   </select>
 </mapper>

@@ -1,5 +1,6 @@
 package com.liyang.orchard.service.impl;
 
+import com.liyang.orchard.config.shiro.SysUser;
 import com.liyang.orchard.dao.UserMapper;
 import com.liyang.orchard.model.User;
 import com.liyang.orchard.model.user.DetailUser;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 
 /**
@@ -45,5 +47,11 @@ public class UserServiceImpl extends AbstractService<User> implements UserServic
     public void setUserInfo(UpdateUser updateUser) {
         userMapper.setUserInfo(updateUser);
     }
+
+    @Override
+    public List<SysUser> findUserAuthority(String phone) {
+        return userMapper.findUserAuthority(phone);
+    }
+
 
 }

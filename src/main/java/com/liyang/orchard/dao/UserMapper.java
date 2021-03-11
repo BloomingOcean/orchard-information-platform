@@ -1,5 +1,6 @@
 package com.liyang.orchard.dao;
 
+import com.liyang.orchard.config.shiro.SysUser;
 import com.liyang.orchard.core.Mapper;
 import com.liyang.orchard.model.User;
 import com.liyang.orchard.model.user.DetailUser;
@@ -12,6 +13,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.type.JdbcType;
 
 import javax.persistence.Id;
+import java.util.List;
 
 @org.apache.ibatis.annotations.Mapper
 public interface UserMapper extends Mapper<User> {
@@ -36,4 +38,6 @@ public interface UserMapper extends Mapper<User> {
     DetailUser getDetailUserInfo(@Param("userId")Integer userId);
 
     void setUserInfo(@Param("updateUser")UpdateUser updateUser);
+
+    List<SysUser> findUserAuthority(@Param("userPhone") String phone);
 }
