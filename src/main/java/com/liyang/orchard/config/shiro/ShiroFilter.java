@@ -40,7 +40,7 @@ public class ShiroFilter extends FormAuthenticationFilter {
         //从当前shiro中获得用户信息
         User user = (User) SecurityUtils.getSubject().getPrincipal();
         //对当前ID进行SHA256加密
-        String encryptionKey= DigestUtils.sha256Hex(SINGNATURE_TOKEN+user.getName());
+        String encryptionKey= DigestUtils.sha256Hex(SINGNATURE_TOKEN + user.getName());
         if (encryptionKey.equals(token)){
             return true;
         }else{
@@ -48,6 +48,7 @@ public class ShiroFilter extends FormAuthenticationFilter {
         }
         return false;
     }
+
     private String getRequestToken(HttpServletRequest request){
         //默认从请求头中获得token
         String token = request.getHeader("token");
