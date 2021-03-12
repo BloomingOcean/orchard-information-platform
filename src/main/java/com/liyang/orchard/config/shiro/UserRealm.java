@@ -2,6 +2,7 @@ package com.liyang.orchard.config.shiro;
 
 import com.alibaba.fastjson.JSONObject;
 //import com.li.example.service.LoginService;
+import com.liyang.orchard.utils.TokenUtils;
 import com.liyang.orchard.utils.constants.Constants;
 import com.liyang.orchard.model.User;
 import com.liyang.orchard.service.UserService;
@@ -21,7 +22,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @description: 自定义Realm
@@ -34,17 +39,37 @@ public class UserRealm extends AuthorizingRealm {
 	@Autowired
 	private UserService userService;
 
+	@Resource
+	TokenUtils tokenUtils;
+
+//	/**
+//	 * 指定自定义的token实例
+//	 * @param authenticationToken token
+//	 * @return token
+//	 */
+//	@Override
+//	public boolean supports(AuthenticationToken authenticationToken) {
+//		// 指定当前 authenticationToken 需要为 ShiroAuthToken 的实例
+//		return authenticationToken instanceof ShiroAuthToken;
+//	}
+
 	@Override
 	@SuppressWarnings("unchecked")
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-		Session session = SecurityUtils.getSubject().getSession();
-		// 查询用户的权限
-		JSONObject permission = (JSONObject) session.getAttribute(Constants.SESSION_USER_PERMISSION);
-		logger.info("permission的值为:" + permission);
-		logger.info("本用户权限为:" + permission.get("permissionList"));
+		// 根据用户手机号码获得用户权限信息
+		List<SysUser> sysUser = userService.findUserAuthority(principals.toString());
+		System.out.println("principals.toString():" + principals.toString());
+		Collection<String> userPermissions = new ArrayList<>();
+		Collection<String> userRoles = new ArrayList<>();
+		for (SysUser user : sysUser) {
+			userPermissions.add(user.getUserPermission());
+			userRoles.add(user.getUserRole());
+		}
+		System.out.println("userPermission:" + userPermissions);
 		// 为当前用户设置角色和权限
 		SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-		authorizationInfo.addStringPermissions((Collection<String>) permission.get("permissionList"));
+		authorizationInfo.addStringPermissions(userPermissions);
+		authorizationInfo.addRoles(userRoles);
 		return authorizationInfo;
 	}
 
@@ -54,30 +79,20 @@ public class UserRealm extends AuthorizingRealm {
 	 */
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken) throws AuthenticationException {
-		System.out.println("authcToken.getPrincipal:" + authcToken.getPrincipal());
 		String phone = (String) authcToken.getPrincipal();
-		authcToken.getCredentials();
-		// 获取电话和密码
-//		String password = new String((char[]) authcToken.getCredentials());
+		// 获取用户信息
 		User user = userService.findByPhone(phone);
 		if (user == null) {
 			//没找到帐号
 			throw new UnknownAccountException();
 		}
-		// session中不需要保存密码
-		JSONObject info = new JSONObject();
-		info.put("phone", user.getPhone());
-		info.put("nikename", user.getNickname());
-		// 将用户信息放入session中
-		SecurityUtils.getSubject().getSession().setAttribute(Constants.SESSION_USER_INFO, info);
-		// 获取principal(UUID),hashedCredentials(凭证)
 		Object principal = user.getPhone();
 		Object hashedCredentials = user.getPassword();
-		// 盐值
+		// 固定盐值
 		ByteSource salt = ByteSource.Util.bytes("orchard");
 		System.out.println("salt:" + salt);
 		// 交给AuthenticatingRealm使用CredentialsMatcher进行密码匹配
-		return new SimpleAuthenticationInfo(principal,hashedCredentials,salt,getName());
+		return new SimpleAuthenticationInfo(principal, hashedCredentials, salt, getName());
 	}
 }
 

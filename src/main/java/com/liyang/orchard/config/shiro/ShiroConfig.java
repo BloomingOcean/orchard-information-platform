@@ -7,15 +7,15 @@ import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
-import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
-import org.apache.shiro.web.servlet.Cookie;
-import org.apache.shiro.web.servlet.SimpleCookie;
-import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.apache.shiro.web.mgt.CookieRememberMeManager;
+import org.apache.shiro.web.servlet.Cookie;
+import org.apache.shiro.web.servlet.SimpleCookie;
+import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 
 import javax.servlet.Filter;
 import java.util.LinkedHashMap;
@@ -31,31 +31,36 @@ public class ShiroConfig {
 	 */
 	@Bean(name = "shiroFilter")
 	public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager) {
+		// 实例化拦截器工厂Bean
 		ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
-		//Shiro的核心安全接口,这个属性是必须的
+		// 给拦截器工厂设置（安全管理器）属性
 		shiroFilterFactoryBean.setSecurityManager(securityManager);
+		// 给拦截器工厂设置（过滤器）属性
 		Map<String, Filter> filterMap = new LinkedHashMap<>();
-		filterMap.put("authc", new AjaxPermissionsAuthorizationFilter());
-		// 添加自己的过滤器并且取名为jwt
-//		filterMap.put("jwt", new JWTFilter());
+		// 添加自己的过滤器并且取名为authc
+		filterMap.put("authc", new ShiroAuthFilter());
 		shiroFilterFactoryBean.setFilters(filterMap);
-		// 未验证重定向地址
+		// 给拦截器工厂设置（未验证重定向地址）属性
 		shiroFilterFactoryBean.setUnauthorizedUrl("/401");
-		/*定义shiro过滤链  Map结构
+		/**
+		 * 定义shiro过滤链（Map结构）
 		 * Map中key(xml中是指value值)的第一个'/'代表的路径是相对于HttpServletRequest.getContextPath()的值来的
 		 * anon：它对应的过滤器里面是空的,什么都没做,这里.do和.jsp后面的*表示参数,比方说login.jsp?main这种
 		 * authc：该过滤器下的页面必须验证后才能访问,它是Shiro内置的一个拦截器org.apache.shiro.web.filter.authc.FormAuthenticationFilter
 		 */
 		Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
-         /* 过滤链定义，从上向下顺序执行，一般将 / ** 放在最为下边:这是一个坑呢，一不小心代码就不好使了;
-          authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问 */
-		// 放行登录、退出、静态资源、错误页面的请求
+		/**
+		 * （重要）过滤链定义，从上向下顺序执行，一般将 /** 放在最为下边
+		 * authc: 所有url都必须认证通过才可以访问;
+		 * anon:  所有url都都可以匿名访问
+		 */
+		// 放行登录、退出、静态资源、错误页面、发送短信的请求
 		filterChainDefinitionMap.put("/", "anon");
 		filterChainDefinitionMap.put("/static/**", "anon");
 		filterChainDefinitionMap.put("/login", "anon");
+		filterChainDefinitionMap.put("/register", "anon");
 		filterChainDefinitionMap.put("/logout", "anon");
 		filterChainDefinitionMap.put("/error", "anon");
-		filterChainDefinitionMap.put("/register", "anon");
 		filterChainDefinitionMap.put("/SMSCallback", "anon");
 		filterChainDefinitionMap.put("/SMS", "anon");
 		// 放行swagger2API页面请求
@@ -71,9 +76,21 @@ public class ShiroConfig {
 		// 2、VIP用户可以看园主之家、用户电话号码（需要单独对这两个请求的url添加权限判断）
 		// 注：用户电话号码可以在展示的请求service中（infoSquare）做业务处理（判断权限然后修改phone的值）
 
+		// 管理员
+//		filterChainDefinitionMap.put("/user/detailinfo", "perms[user:delete]");
+//		filterChainDefinitionMap.put("/type/detail", "roles[admin]");
 
-		// 除了上述url是可以放行之外,其余请求路径都必须验证
+		// 管理员、vip
+//		filterChainDefinitionMap.put("/feedback/detail", "perms[show:phone]");
+//		filterChainDefinitionMap.put("/square/details", "roles[vip]");
+
+		// 管理员、vip、普通用户
+//		filterChainDefinitionMap.put("/ownerHouse/detail", "perms[user:update]");
+//		filterChainDefinitionMap.put("/square/sebyid", "roles[ordinary]");
+
+		// 除了上述url是可以放行之外,其余请求路径都必须验证（在这里是token验证）
 		filterChainDefinitionMap.put("/**", "authc");
+		// 给拦截器工厂设置（过滤链）属性
 		shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 		return shiroFilterFactoryBean;
 	}
@@ -112,71 +129,70 @@ public class ShiroConfig {
 	/**
 	 * shiro session的管理
 	 */
-	@Bean
-	public DefaultWebSessionManager sessionManager() {
-		DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
-		// 会话超时时间，单位：毫秒，默认30分钟(1800000)
-		sessionManager.setGlobalSessionTimeout(1800000);
-		// 定时清理失效会话, 清理用户直接关闭浏览器造成的孤立会话
-		sessionManager.setSessionValidationInterval(1800000);
-		sessionManager.setSessionValidationSchedulerEnabled(true);
-		// 指定sessionid
-		sessionManager.setSessionIdCookie(sessionIdCookie());
-		sessionManager.setSessionIdCookieEnabled(true);
-		sessionManager.getSessionIdCookie().setSecure(false);
-		// 去掉shiro登录时url里的JSESSIONID
-		sessionManager.setSessionIdUrlRewritingEnabled(false);
-		return sessionManager;
-	}
+//	@Bean
+//	public DefaultWebSessionManager sessionManager() {
+//		DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
+//		// 会话超时时间，单位：毫秒，默认30分钟(1800000)
+//		sessionManager.setGlobalSessionTimeout(1800000);
+//		// 定时清理失效会话, 清理用户直接关闭浏览器造成的孤立会话
+//		sessionManager.setSessionValidationInterval(1800000);
+//		sessionManager.setSessionValidationSchedulerEnabled(true);
+//		// 指定sessionid
+//		sessionManager.setSessionIdCookie(sessionIdCookie());
+//		sessionManager.setSessionIdCookieEnabled(true);
+//		sessionManager.getSessionIdCookie().setSecure(false);
+//		// 去掉shiro登录时url里的JSESSIONID
+//		sessionManager.setSessionIdUrlRewritingEnabled(false);
+//		return sessionManager;
+//	}
 
 	/**
 	 * 防止放行的静态资源等请求修改存sessionid的cookie
 	 */
-	@Bean
-	public SimpleCookie sessionIdCookie() {
-		SimpleCookie sessionIdCookie = new SimpleCookie("sid");
-		sessionIdCookie.setHttpOnly(true);
-		sessionIdCookie.setMaxAge(-1);
-		return sessionIdCookie;
-	}
+//	@Bean
+//	public SimpleCookie sessionIdCookie() {
+//		SimpleCookie sessionIdCookie = new SimpleCookie("sid");
+//		sessionIdCookie.setHttpOnly(true);
+//		sessionIdCookie.setMaxAge(-1);
+//		return sessionIdCookie;
+//	}
 
 	/**
 	 * cookie对象;
 	 * rememberMeCookie()方法是设置Cookie的生成模版，比如cookie的name，cookie的有效时间等等。
 	 */
-	@Bean
-	public SimpleCookie rememberMeCookie(){
-		//这个参数是cookie的名称，对应前端的name = rememberMe
-		SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
-		//<!-- 记住我cookie生效时间 ,单位秒;-->
-		simpleCookie.setMaxAge(Cookie.ONE_YEAR);
-		return simpleCookie;
-	}
+//	@Bean
+//	public SimpleCookie rememberMeCookie(){
+//		//这个参数是cookie的名称，对应前端的name = rememberMe
+//		SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
+//		//<!-- 记住我cookie生效时间 ,单位秒;-->
+//		simpleCookie.setMaxAge(Cookie.ONE_YEAR);
+//		return simpleCookie;
+//	}
 
 	/**
 	 * cookie管理对象;
 	 * rememberMeManager()方法是生成rememberMe管理器，而且要将这个rememberMe管理器设置到securityManager中
 	 */
-	@Bean
-	public CookieRememberMeManager rememberMeManager(){
-		CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
-		cookieRememberMeManager.setCookie(rememberMeCookie());
-		//rememberMe cookie加密的密钥 默认AES算法 密钥长度(128 256 512 位)
-		cookieRememberMeManager.setCipherKey("x5+126q47832#4*k".getBytes());
-		return cookieRememberMeManager;
-	}
+//	@Bean
+//	public CookieRememberMeManager rememberMeManager(){
+//		CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
+//		cookieRememberMeManager.setCookie(rememberMeCookie());
+//		//rememberMe cookie加密的密钥 默认AES算法 密钥长度(128 256 512 位)
+//		cookieRememberMeManager.setCipherKey("x5+126q47832#4*k".getBytes());
+//		return cookieRememberMeManager;
+//	}
 
 	/**
 	 * 凭证匹配器
-	 * （由于我们的密码校验交给Shiro的SimpleAuthenticationInfo进行处理了
+	 * 由于我们的密码校验交给Shiro的SimpleAuthenticationInfo进行处理了
 	 * 所以我们需要修改下doGetAuthenticationInfo中的代码;
-	 * ）
 	 * 可以扩展凭证匹配器，实现 输入密码错误次数后锁定等功能，下一次
 	 */
 	@Bean(name = "credentialsMatcher")
 	public HashedCredentialsMatcher hashedCredentialsMatcher() {
 		HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
-		//散列算法:这里使用MD5算法;
+		//散列算法: 这里使用MD5算法;
 		hashedCredentialsMatcher.setHashAlgorithmName("md5");
 		//散列的次数，比如散列两次，相当于 md5(md5(""));
 		hashedCredentialsMatcher.setHashIterations(2);

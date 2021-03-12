@@ -1,5 +1,6 @@
 package com.liyang.orchard.controller;
 
+import com.liyang.orchard.config.shiro.SysUser;
 import com.liyang.orchard.core.Result;
 import com.liyang.orchard.core.ResultGenerator;
 import com.liyang.orchard.model.User;
@@ -9,6 +10,7 @@ import com.liyang.orchard.service.UserService;
 import com.liyang.orchard.utils.MD5Utils;
 import com.liyang.orchard.utils.RedisUtil;
 import com.liyang.orchard.utils.TokenUtil;
+import com.liyang.orchard.utils.TokenUtils;
 import com.liyang.orchard.utils.verify.VerifyCharCodeGenImpl;
 import com.liyang.orchard.utils.verify.VerifyCode;
 import com.liyang.orchard.utils.verify.VerifyCodeGen;
@@ -28,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.List;
 
 import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
 
@@ -98,18 +101,23 @@ public class LoginRegisterController {
         try {
             // shiro进行登录操作
             currentUser.login(currentToken);
-//            return ResultGenerator.genSuccessResult();
         } catch (AuthenticationException e) {
             return ResultGenerator.genFailResult("登录失败");
         }
-        User user = userService.findByPhone(phone);
+
+        // 根据phone从数据库获取用户信息
+        List<SysUser> sysUser = userService.findUserAuthority(phone);
+
         // 生成一个token
-        String token = TokenUtil.getToken(user.getUserId(), user.getName());
+//        String token = TokenUtil.getToken(user.getUserId(), user.getName());
+        TokenUtils tokenUtils = new TokenUtils();
+        String token = tokenUtils.createToken(sysUser.get(0));
+
         // 生成一个LoginUser
         LoginUser loginUser = new LoginUser();
-        loginUser.setUserId(user.getUserId());
+        loginUser.setUserId(sysUser.get(0).getUserId());
         loginUser.setUserPhone(phone);
-        loginUser.setUserNikename(user.getNickname());
+        loginUser.setUserNikename(sysUser.get(0).getUsername());
         loginUser.setUserToken(token);
         return ResultGenerator.genSuccessResult(loginUser);
     }
