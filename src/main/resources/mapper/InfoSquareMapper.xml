@@ -36,12 +36,12 @@
     <result column="info_type_id" jdbcType="INTEGER" property="infoTypeId" />
     <result column="tags" jdbcType="VARCHAR" property="tags" />
     <result column="rich_text" jdbcType="VARCHAR" property="richText" />
-    <collection property="imgList" ofType="com.liyang.orchard.model.ImgList">
-      <result property="imgId" column="img_id"/>
-      <result property="infoSquareId" column="info_square_id"/>
-      <result property="ownerHouseId" column="owner_house_id"/>
-      <result property="imgUrl" column="img_url"/>
-    </collection>
+<!--    <collection property="imgList" ofType="com.liyang.orchard.model.ImgList">-->
+<!--      <result property="imgId" column="img_id"/>-->
+<!--      <result property="infoSquareId" column="info_square_id"/>-->
+<!--      <result property="ownerHouseId" column="owner_house_id"/>-->
+<!--      <result property="imgUrl" column="img_url"/>-->
+<!--    </collection>-->
   </resultMap>
 
   <resultMap id="MyInfoSquareMap" type="com.liyang.orchard.model.infosquare.vo.MyInfoSquare">
@@ -64,14 +64,15 @@
     <result column="info_type_id" jdbcType="INTEGER" property="infoTypeId" />
     <result column="tags" jdbcType="VARCHAR" property="tags" />
     <result column="rich_text" jdbcType="VARCHAR" property="richText" />
-    <collection property="imgList" ofType="com.liyang.orchard.model.ImgList">
-      <result property="imgId" column="img_id"/>
-      <result property="infoSquareId" column="info_square_id"/>
-      <result property="ownerHouseId" column="owner_house_id"/>
-      <result property="imgUrl" column="img_url"/>
-    </collection>
+<!--    <collection property="imgList" ofType="com.liyang.orchard.model.ImgList">-->
+<!--      <result property="imgId" column="img_id"/>-->
+<!--      <result property="infoSquareId" column="info_square_id"/>-->
+<!--      <result property="ownerHouseId" column="owner_house_id"/>-->
+<!--      <result property="imgUrl" column="img_url"/>-->
+<!--    </collection>-->
   </resultMap>
 
+  <!-- 查询所有字段(不包括图片) -->
   <select id="getInfoById" resultMap="BaseResultMap">
     select * from info_square
     <where>
@@ -79,89 +80,102 @@
     </where>
   </select>
 
+  <!-- 查询所有字段(包括图片) -->
   <select id="selectInfoSquareAllById" resultMap="BaseResultMap">
     SELECT * FROM info_square ins,img_list iml
     WHERE ins.info_id=iml.info_square_id
     AND ins.info_id=#{infoId}
   </select>
 
-  <insert id="insertBuyInfoSquare" useGeneratedKeys="true" keyProperty="BIS.infoId" parameterType="com.liyang.orchard.model.infosquare.BuyInfoSquare">
-    insert into info_square(user_id,title,description,address,phone,buy_weight,name,info_type_id,release_date,tags)
-    values(#{BIS.userId},#{BIS.title},#{BIS.description},#{BIS.address},#{BIS.phone},#{BIS.buyWeight},#{name},2,NOW(),#{tag})
-  </insert>
-
-  <insert id="insertSupplyInfoSquare" useGeneratedKeys="true" keyProperty="SIS.infoId" parameterType="com.liyang.orchard.model.infosquare.SupplyInfoSquare">
-    insert into info_square(user_id,title,description,address,phone,name,info_type_id,release_date,tags)
-    values(#{SIS.userId},#{SIS.title},#{SIS.description},#{SIS.address},#{SIS.phone},#{name},1,NOW(),#{tag})
-  </insert>
-
-  <insert id="insertLabourInfoSquare" useGeneratedKeys="true" keyProperty="LaIS.infoId" parameterType="com.liyang.orchard.model.infosquare.LabourInfoSquare">
-    insert into info_square(user_id,title,description,address,phone,recruit_num,name,info_type_id,release_date,tags)
-    values(#{LaIS.userId},#{LaIS.title},#{LaIS.description},#{LaIS.address},#{LaIS.phone},#{LaIS.recruitNum},#{name},4,NOW(),#{tag})
-  </insert>
-
-  <insert id="insertLeaseInfoSquare" useGeneratedKeys="true" keyProperty="LeIS.infoId" parameterType="com.liyang.orchard.model.infosquare.LeaseInfoSquare">
-    insert into info_square(user_id,title,description,address,phone,name,info_type_id,release_date,tags)
-    values(#{LeIS.userId},#{LeIS.title},#{LeIS.description},#{LeIS.address},#{LeIS.phone},#{name},5,NOW(),#{tag})
-  </insert>
-
-  <insert id="insertTransferInfoSquare" useGeneratedKeys="true" keyProperty="TIS.infoId" parameterType="com.liyang.orchard.model.infosquare.TransferInfoSquare">
-    insert into info_square(user_id,title,description,address,phone,name,info_type_id,release_date,tags)
-    values(#{TIS.userId},#{TIS.title},#{TIS.description},#{TIS.address},#{TIS.phone},#{name},3,NOW(),#{tag})
-  </insert>
-
-  <select id="selectMyInfoSquareList" resultMap="PaginationInfoSquareMap">
-    select * from info_square ins,img_list iml
-    where ins.info_id=iml.info_square_id AND
-    ins.user_id=#{userId}
-  </select>
-
-  <select id="selectMyInfoSquareListWithoutImg" resultMap="MyInfoSquareMap">
-    select * from info_square
-    where user_id=#{userId}
-  </select>
-
-
-
-
-
-
-
-
-
-
-
-
+  <!-- 更新信息 -->
   <update id="updateInfoSquare">
     UPDATE info_square
     <set>
-        user_id=#{UIQ.userId},title=#{UIQ.title},description=#{UIQ.description},
-        address=#{UIQ.address},`name`=#{name},phone=#{UIQ.phone},
-        video_url=#{UIQ.videoUrl},buy_weight=#{UIQ.buyWeight},
-        recruit_num=#{UIQ.recruitNum},info_type_id=#{UIQ.infoTypeId},
-        tags=#{UIQ.tags},release_date=NOW()
+      user_id=#{UIQ.userId},title=#{UIQ.title},description=#{UIQ.description},
+      address=#{UIQ.address},`name`=#{name},phone=#{UIQ.phone},
+      video_url=#{UIQ.videoUrl},buy_weight=#{UIQ.buyWeight},
+      recruit_num=#{UIQ.recruitNum},info_type_id=#{UIQ.infoTypeId},
+      tags=#{UIQ.tags},release_date=NOW()
     </set>
     <where>
       info_id = #{UIQ.infoId}
     </where>
   </update>
 
+
+  <!-- ============================ 发布信息功能START ============================ -->
+  <!-- 插入“购买信息” -->
+  <insert id="insertBuyInfoSquare" useGeneratedKeys="true" keyProperty="BIS.infoId" parameterType="com.liyang.orchard.model.infosquare.BuyInfoSquare">
+    insert into info_square(user_id,title,description,address,phone,buy_weight,name,info_type_id,release_date,tags)
+    values(#{BIS.userId},#{BIS.title},#{BIS.description},#{BIS.address},#{BIS.phone},#{BIS.buyWeight},#{name},2,NOW(),#{BIS.tags})
+  </insert>
+  <!-- 插入“供应信息” -->
+  <insert id="insertSupplyInfoSquare" useGeneratedKeys="true" keyProperty="SIS.infoId" parameterType="com.liyang.orchard.model.infosquare.SupplyInfoSquare">
+    insert into info_square(user_id,title,description,address,phone,name,info_type_id,release_date,tags)
+    values(#{SIS.userId},#{SIS.title},#{SIS.description},#{SIS.address},#{SIS.phone},#{name},1,NOW(),#{SIS.tags})
+  </insert>
+  <!-- 插入“劳务信息” -->
+  <insert id="insertLabourInfoSquare" useGeneratedKeys="true" keyProperty="LaIS.infoId" parameterType="com.liyang.orchard.model.infosquare.LabourInfoSquare">
+    insert into info_square(user_id,title,description,address,phone,recruit_num,name,info_type_id,release_date,tags)
+    values(#{LaIS.userId},#{LaIS.title},#{LaIS.description},#{LaIS.address},#{LaIS.phone},#{LaIS.recruitNum},#{name},4,NOW(),#{LaIS.tags})
+  </insert>
+  <!-- 插入“租赁信息” -->
+  <insert id="insertLeaseInfoSquare" useGeneratedKeys="true" keyProperty="LeIS.infoId" parameterType="com.liyang.orchard.model.infosquare.LeaseInfoSquare">
+    insert into info_square(user_id,title,description,address,phone,name,info_type_id,release_date,tags)
+    values(#{LeIS.userId},#{LeIS.title},#{LeIS.description},#{LeIS.address},#{LeIS.phone},#{name},5,NOW(),#{LeIS.tags})
+  </insert>
+  <!-- 插入“转让信息” -->
+  <insert id="insertTransferInfoSquare" useGeneratedKeys="true" keyProperty="TIS.infoId" parameterType="com.liyang.orchard.model.infosquare.TransferInfoSquare">
+    insert into info_square(user_id,title,description,address,phone,name,info_type_id,release_date,tags)
+    values(#{TIS.userId},#{TIS.title},#{TIS.description},#{TIS.address},#{TIS.phone},#{name},3,NOW(),#{TIS.tags})
+  </insert>
+  <!-- ============================= 发布信息功能END ============================= -->
+
+
+  <!-- ===================== 搜索功能START(在service会有封装) ===================== -->
+  <!-- 根据tags模糊查询 所有类型的信息 -->
   <select id="searchInfoSquareByPiece" resultMap="SearchInfoSquareMap">
     SELECT * FROM info_square
     WHERE tags LIKE concat('%',#{queryText},'%')
   </select>
-
+  <!-- 根据tags模糊查询 某一类型的信息 -->
   <select id="searchInfoSquareByType" resultMap="SearchInfoSquareMap">
     SELECT * FROM info_square
     WHERE tags LIKE concat('%',#{queryText},'%')
-    AND info_type_id=#{infoType};
+    AND info_type_id=#{infoType}
   </select>
-
+  <!-- 查询某一类型的所有信息 -->
   <select id="searchAllInfoSquareByType" resultMap="SearchInfoSquareMap">
-    SELECT * FROM info_square where info_type_id=#{infoType};
+    SELECT * FROM info_square
+    where info_type_id=#{infoType}
   </select>
-
+  <!-- 查询所有信息 -->
   <select id="searchAllInfoSquare" resultMap="SearchInfoSquareMap">
-    SELECT * FROM info_square;
+    SELECT * FROM info_square
   </select>
+  <!-- ============================== 搜索功能END ============================== -->
+
+
+  <!-- ============================== 查询功能START ============================== -->
+  <!-- 查询我发布的信息(包含富文本、包含图片) -->
+  <select id="selectMyInfoSquareList" resultMap="PaginationInfoSquareMap">
+    select * from info_square
+    where user_id=#{userId}
+  </select>
+  <!-- 查询我发布的信息(包含富文本、不包含图片) -->
+  <select id="selectMyInfoSquareListWithoutImg" resultMap="MyInfoSquareMap">
+    select * from info_square
+    where user_id=#{userId}
+  </select>
+  <!-- 电梯式查询(根据id排序) -->
+  <select id="selectInfoSquareByElevator" resultMap="PaginationInfoSquareMap">
+    select * from info_square
+    ORDER BY info_id DESC
+  </select>
+  <!-- 流式查询(根据时间排序) -->
+  <select id="selectInfoSquareByStream" resultMap="PaginationInfoSquareMap">
+    select * from info_square ins
+    ORDER BY release_date DESC
+  </select>
+  <!-- ============================== 查询功能END ============================== -->
 </mapper>

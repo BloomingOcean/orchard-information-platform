@@ -272,7 +272,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-
             <!--指定maven使用jdk版本以及编码格式-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

@@ -69,7 +69,7 @@
     where user_id=#{userId}
   </select>
 
-  <select id="setUserInfo" resultMap="UpdateUser">
+  <update id="setUserInfo">
     update user
     <set>
         portrait_url=#{updateUser.portraitUrl},nickname=#{updateUser.nickname},
@@ -80,7 +80,7 @@
     <where>
       user_id = #{updateUser.userId}
     </where>
-  </select>
+  </update>
 
   <select id="findUserAuthority" resultMap="AuthoritySysUser" >
     SELECT user_id,`password`,`name`,role_name,permission_code FROM `user` INNER JOIN

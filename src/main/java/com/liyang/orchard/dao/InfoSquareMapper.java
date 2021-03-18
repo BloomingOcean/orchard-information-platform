@@ -5,7 +5,6 @@ import com.liyang.orchard.model.InfoSquare;
 import com.liyang.orchard.model.infosquare.*;
 import com.liyang.orchard.model.infosquare.vo.MyInfoSquare;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -49,4 +48,8 @@ public interface InfoSquareMapper extends Mapper<InfoSquare> {
     List<SearchInfoSquare> searchAllInfoSquareByType(@Param("infoType") Integer infoType);
 
     List<SearchInfoSquare> searchAllInfoSquare();
+
+    List<PaginationInfoSquare> selectInfoSquareByElevator();
+
+    List<PaginationInfoSquare> selectInfoSquareByStream();
 }

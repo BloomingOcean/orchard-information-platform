@@ -147,4 +147,25 @@ public class InfoSquareController {
         return ResultGenerator.genSuccessResult(searchResult);
     }
 
+    @ApiOperation(value = "分页查询-电梯式")
+    @RequestMapping(value = "/selectbyelevator", method = RequestMethod.GET)
+    Result selectInfoSquareByElevator(@ApiParam("页数") @RequestParam(defaultValue = "0") Integer page,
+                                      @ApiParam("每页展示数量") @RequestParam(defaultValue = "0") Integer size) {
+        PageHelper.startPage(page, size);
+        List<PaginationInfoSquare> infoSquares = infoSquareService.selectInfoSquareByElevator();
+
+        PageInfo pageInfo = new PageInfo(infoSquares);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
+    @ApiOperation(value = "分页查询-流式")
+    @RequestMapping(value = "/selectbystream", method = RequestMethod.GET)
+    Result selectInfoSquareByStream(@ApiParam("页数") @RequestParam(defaultValue = "0") Integer page,
+                                    @ApiParam("每页展示数量") @RequestParam(defaultValue = "0") Integer size) {
+        PageHelper.startPage(page, size);
+        List<PaginationInfoSquare> infoSquares = infoSquareService.selectInfoSquareByStream();
+
+        PageInfo pageInfo = new PageInfo(infoSquares);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
 }

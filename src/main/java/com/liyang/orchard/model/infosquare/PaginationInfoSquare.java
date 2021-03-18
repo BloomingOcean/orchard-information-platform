@@ -58,9 +58,13 @@ public class PaginationInfoSquare {
 //    @Column(name = "video_url")
 //    private String videoUrl;
 
+//    @ApiModelProperty(value = "图片列表")
+//    @Transient
+//    private List<ImgList> imgList;
+
     @ApiModelProperty(value = "图片列表")
     @Transient
-    private List<ImgList> imgList;
+    private List<String> imgList;
 
 //    @ApiModelProperty(value = "求购重量")
 //    @Column(name = "buy_weight")

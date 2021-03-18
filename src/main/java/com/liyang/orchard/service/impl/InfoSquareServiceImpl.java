@@ -151,10 +151,6 @@ public class InfoSquareServiceImpl extends AbstractService<InfoSquare> implement
 
     @Override
     public List<MyInfoSquare> selectMyInfoSquareList(Integer userId) {
-        // 这是原来的方法
-//        List<PaginationInfoSquare> list = infoSquareMapper.selectMyInfoSquareList(userId);
-//        System.out.println("infoSquareMapper->list:"+list);
-
         List<MyInfoSquare> myInfoSquareList = infoSquareMapper.selectMyInfoSquareListWithoutImg(userId);
         for (MyInfoSquare myInfoSquare : myInfoSquareList) {
             List<ImgList> imgLists = imgListService.selectByInfoSquareId(myInfoSquare.getInfoId());
@@ -164,16 +160,6 @@ public class InfoSquareServiceImpl extends AbstractService<InfoSquare> implement
                 myInfoSquare.setImgList(imgList);
             }
         }
-//        for (int i = 0; i < myInfoSquareList.size(); i++) {
-//            MyInfoSquare myInfoSquare = myInfoSquareList.get(i);
-//            Integer infoID = myInfoSquare.getInfoId();
-//            List<ImgList> imgLists = imgListService.selectByInfoSquareId(infoID);
-//            for (int i1 = 0; i1 < imgLists.size(); i1++) {
-//                ImgList imgObject = imgLists.get(i1);
-//                String imgUrl = imgObject.getImgUrl();
-//                myInfoSquare.getImgList().add(imgUrl);
-//            }
-//        }
         return myInfoSquareList;
     }
 
@@ -196,11 +182,6 @@ public class InfoSquareServiceImpl extends AbstractService<InfoSquare> implement
         // 删除imgList原先图片
         imgListService.deleteByInfoSquareId(infoSquareId);
         // 更新imgList表数据
-//        List<String> imgList = new LinkedList<>();
-//        for (String newImgUrl: infoSquare.getImgList()
-//        ) {
-//            imgListService.save(ImgList.builder().infoSquareId(infoSquareId).imgUrl(newImgUrl).build());
-//        }
         List<String> imgList = new LinkedList<>();
         for (String newUrl : updateInfoSquare.getImgList()
         ) {
@@ -228,5 +209,33 @@ public class InfoSquareServiceImpl extends AbstractService<InfoSquare> implement
             }
         }
         return searchList;
+    }
+
+    @Override
+    public List<PaginationInfoSquare> selectInfoSquareByElevator() {
+        List<PaginationInfoSquare> infoSquareList = infoSquareMapper.selectInfoSquareByElevator();
+        for (PaginationInfoSquare infoSquare : infoSquareList) {
+            List<ImgList> imgLists = imgListService.selectByInfoSquareId(infoSquare.getInfoId());
+            List<String> imgList = new ArrayList<>();
+            for (ImgList imgObject : imgLists) {
+                imgList.add(imgObject.getImgUrl());
+            }
+            infoSquare.setImgList(imgList);
+        }
+        return infoSquareList;
+    }
+
+    @Override
+    public List<PaginationInfoSquare> selectInfoSquareByStream() {
+        List<PaginationInfoSquare> infoSquareList = infoSquareMapper.selectInfoSquareByStream();
+        for (PaginationInfoSquare infoSquare : infoSquareList) {
+            List<ImgList> imgLists = imgListService.selectByInfoSquareId(infoSquare.getInfoId());
+            List<String> imgList = new ArrayList<>();
+            for (ImgList imgObject : imgLists) {
+                imgList.add(imgObject.getImgUrl());
+            }
+            infoSquare.setImgList(imgList);
+        }
+        return infoSquareList;
     }
 }
