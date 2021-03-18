@@ -22,6 +22,19 @@
     <result column="video_source" jdbcType="VARCHAR" property="videoSource" />
   </resultMap>
 
+  <resultMap id="PaginationOwnerHouseMap" type="com.liyang.orchard.model.ownerhouse.PaginationOwnerHouse">
+    <id column="owner_house_id" jdbcType="INTEGER" property="ownerHouseId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <!--    <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />-->
+    <result column="video_source" jdbcType="VARCHAR" property="videoSource" />
+    <result column="date" jdbcType="DATE" property="date" />
+  </resultMap>
+
+  <sql id="allFields">
+    owner_house_id,user_id,description,video_source,like_it,date
+  </sql>
+
   <insert id="addOwnerHouse" useGeneratedKeys="true" keyProperty="ownerHouseId">
     INSERT INTO owner_house(user_id,description,video_source,date)
     VALUES (#{userId},#{description},#{videoSource},NOW());
@@ -36,4 +49,16 @@
       owner_house_id = #{ownerHouseId}
     </where>
   </update>
+
+  <select id="selectOwnerHouseByElevator" resultMap="PaginationOwnerHouseMap">
+    select <include refid="allFields" />
+    FROM owner_house
+    ORDER BY owner_house_id DESC
+  </select>
+
+  <select id="selectOwnerHouseByStream" resultMap="PaginationOwnerHouseMap">
+    select <include refid="allFields" />
+    FROM owner_house
+    ORDER BY date DESC
+  </select>
 </mapper>
