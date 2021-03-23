@@ -5,7 +5,6 @@ import com.liyang.orchard.core.Result;
 import com.liyang.orchard.core.ResultGenerator;
 import com.liyang.orchard.core.constants.ErrorEnum;
 import com.liyang.orchard.utils.TokenUtils;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.apache.shiro.web.util.WebUtils;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -58,6 +57,10 @@ public class ShiroAuthFilter extends BasicHttpAuthenticationFilter {
 		 * 登录问题（可能是token格式问题，debug试试）
 		 */
 		this.getSubject(request, response).login(new ShiroAuthToken(this.token.substring(BEARER.length())));
+		// 生成token
+//		UsernamePasswordToken currentToken = new UsernamePasswordToken("1234", "1234");
+//		System.out.println("自建固定currentToken登录");
+//		this.getSubject(request, response).login(currentToken);
 		return true;
 	}
 
@@ -116,7 +119,6 @@ public class ShiroAuthFilter extends BasicHttpAuthenticationFilter {
 	 */
 	@Override
 	protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
-		// Request 中存在 Token
 		if (this.getAuthzHeader(request) != null) {
 			try {
 				System.out.println("executeLogin");
@@ -131,6 +133,7 @@ public class ShiroAuthFilter extends BasicHttpAuthenticationFilter {
 				String refreshToken = tokenUtils.refreshToken(this.token);
 				// 如果refreshToken不为null, 则表示刷新token成功
 				if (refreshToken != null) {
+					System.out.println("已刷新token");
 					this.token = refreshToken;
 					// 把新token放入response
 					shiroAuthResponse(response, true);
@@ -155,7 +158,7 @@ public class ShiroAuthFilter extends BasicHttpAuthenticationFilter {
 					shiroAuthResponse(response, true);
 					return true;
 				} else {
-					System.out.println("Token 刷新失败");
+					System.out.println("Token 刷新失败（1、时间还剩不止1分钟 2、时间过期10分钟）");
 					// Token 刷新失败没得救或者非法 Token
 					shiroAuthResponse(response, false);
 					return false;
@@ -168,28 +171,6 @@ public class ShiroAuthFilter extends BasicHttpAuthenticationFilter {
 			return false;
 		}
 	}
-
-//	@Override
-//	protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
-//		JSONObject jsonObject = new JSONObject();
-//		jsonObject.put("code", ErrorEnum.E_20011.getErrorCode());
-//		jsonObject.put("msg", ErrorEnum.E_20011.getErrorMsg());
-//		PrintWriter out = null;
-//		HttpServletResponse res = (HttpServletResponse) response;
-//		try {
-//			res.setCharacterEncoding("UTF-8");
-//			res.setContentType("application/json");
-//			out = response.getWriter();
-//			out.println(jsonObject);
-//		} catch (Exception e) {
-//		} finally {
-//			if (null != out) {
-//				out.flush();
-//				out.close();
-//			}
-//		}
-//		return false;
-//	}
 
 	@Bean
 	public FilterRegistrationBean registration(ShiroAuthFilter filter) {
