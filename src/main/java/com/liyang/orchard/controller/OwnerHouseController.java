@@ -51,7 +51,7 @@ public class OwnerHouseController {
 //        return ResultGenerator.genSuccessResult();
 //    }
 
-//    @RequiresRoles("vip")
+    @RequiresRoles("vip")
 //    @RequiresPermissions("")
     @ApiOperation(value = "根据id查询-园主之家信息")
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
