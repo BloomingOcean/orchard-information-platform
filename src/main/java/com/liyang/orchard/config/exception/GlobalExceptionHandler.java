@@ -1,8 +1,11 @@
 package com.liyang.orchard.config.exception;
 
 import com.alibaba.fastjson.JSONObject;
+import com.liyang.orchard.core.Result;
+import com.liyang.orchard.core.ResultGenerator;
 import com.liyang.orchard.utils.CommonUtil;
 import com.liyang.orchard.utils.constants.ErrorEnum;
+import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authz.UnauthenticatedException;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.slf4j.Logger;
@@ -21,6 +24,33 @@ import javax.servlet.http.HttpServletRequest;
 @ResponseBody
 public class GlobalExceptionHandler {
 	private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
+
+	/**
+	 * 用户权限不足！
+	 * @param req
+	 * @param e
+	 * @return
+	 */
+	@ExceptionHandler(value = UnauthorizedException.class)
+	@ResponseBody
+	public Result UnauthorizedExceptionHandler(HttpServletRequest req, Exception e){
+		logger.error("{},用户权限不足！{}",req.getRequestURI(),ErrorEnum.E_502);
+		return ResultGenerator.genFailResult("用户权限不足！");
+	}
+
+	/**
+	 * token已失效
+	 * @param req
+	 * @param e
+	 * @return
+	 */
+	@ExceptionHandler(value = AuthenticationException.class)
+	@ResponseBody
+	public Result AuthenticationExceptionHandler(HttpServletRequest req, Exception e){
+		logger.error("{},token已失效！{}",req.getRequestURI(),ErrorEnum.E_20011);
+		return ResultGenerator.genFailResult("token已失效");
+	}
+
 
 	@ExceptionHandler(value = Exception.class)
 	public JSONObject defaultErrorHandler(HttpServletRequest req, Exception e) {

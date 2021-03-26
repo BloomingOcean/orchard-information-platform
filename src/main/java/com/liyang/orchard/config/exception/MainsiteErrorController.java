@@ -8,11 +8,13 @@ import org.springframework.boot.autoconfigure.web.ErrorController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * @description: 系统错误拦截, 主要是针对404的错误
  */
 @Controller
+@ApiIgnore
 public class MainsiteErrorController implements ErrorController {
 
 	private static final String ERROR_PATH = "/error";
