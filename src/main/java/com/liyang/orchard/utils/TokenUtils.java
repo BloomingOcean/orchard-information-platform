@@ -1,9 +1,13 @@
 package com.liyang.orchard.utils;
 
 import com.liyang.orchard.config.shiro.SysUser;
+import com.liyang.orchard.dao.UserMapper;
 import io.jsonwebtoken.*;
+import io.swagger.models.auth.In;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -20,9 +24,17 @@ public class TokenUtils implements Serializable {
     protected static final String BEARER = "Bearer ";
 
     /**
+     * 发行者
+     */
+    private static final String ISSUER = "liyang";
+
+    /**
      * Token 为空
      */
     protected static final String TOKEN_NULL = "null_token";
+
+    @Resource
+    private UserMapper userMapper;
 
     /** 生成 Token 字符串  setAudience 接收者 setExpiration 过期时间 role 用户角色
      * @param sysUser 用户信息
@@ -35,15 +47,16 @@ public class TokenUtils implements Serializable {
             // 生成 Token
             String token = Jwts.builder()
                     // 设置 Token 签发者 可选
-                    .setIssuer("liyang")
+                    .setIssuer(ISSUER)
                     // 根据用户名设置 Token 的接受者
                     .setAudience(sysUser.getUsername())
                     // 设置过期时间
                     .setExpiration(expirationDate)
                     // 设置 Token 生成时间 可选
                     .setIssuedAt(new Date())
-                    // 通过 claim 方法设置一个 key = userId，value = 用户Id 的值
+                    // 通过 claim 方法设置 key = ，value  的值
                     .claim("userId", sysUser.getUserId())
+//                    .claim("password", sysUser.getPassword())
                     // 设置加密密钥和加密算法，注意要用私钥加密且保证私钥不泄露
                     .signWith(RsaUtils.getPrivateKey(), SignatureAlgorithm.RS256)
                     .compact();
@@ -70,7 +83,10 @@ public class TokenUtils implements Serializable {
             SysUser sysUser = new SysUser();
             // 获得用户信息
             sysUser.setUsername(claims.getAudience());
-            sysUser.setUserRole(claims.get("userId").toString());
+            sysUser.setUserId((Integer) claims.get("userId"));
+//            String phone = claims.get("phone").toString();
+//            String password = userMapper.findByPhone(phone).getPassword();
+//            sysUser.setPassword(password);
 //            sysUser.setUserPermission(claims.get("permission").toString());
             return sysUser;
         } catch (Exception e) {

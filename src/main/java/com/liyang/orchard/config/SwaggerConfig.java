@@ -5,20 +5,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.OAuthBuilder;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.builders.*;
+import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Configuration
 @EnableSwagger2 // 启用 Swagger2
@@ -45,9 +40,9 @@ public class SwaggerConfig {
                     .paths(PathSelectors.regex("/.*"))
                 .build()
                 // 统一加入Authorize/ToKen等公共参数
-//                .securitySchemes(securitySchemes())
+                .securitySchemes(securitySchemes())
 //                .securitySchemes(Arrays.asList(securityScheme()))
-//                .securityContexts(securityContexts())
+                .securityContexts(securityContexts())
                 .apiInfo(studentApiInfo());
     }
 
@@ -69,10 +64,10 @@ public class SwaggerConfig {
                 .build();
     }
 
-//    private List<ApiKey> securitySchemes() {
-//        return new ArrayList(
-//                Collections.singleton(new ApiKey("Authorization", "Authorization", "header")));
-//    }
+    private List<ApiKey> securitySchemes() {
+        return new ArrayList(
+                Collections.singleton(new ApiKey("Authorization", "Authorization", "header")));
+    }
 
     /**
      * 采用了 OAuthBuilder 来构建，构建时即得配置 token 的获取地址
@@ -81,7 +76,8 @@ public class SwaggerConfig {
      * @return SecurityScheme
      */
     private SecurityScheme securityScheme() {
-        GrantType grant = new ResourceOwnerPasswordCredentialsGrant("http://localhost:8080/oauth/token");
+//        GrantType grant = new ResourceOwnerPasswordCredentialsGrant("http://localhost:7489/oauth/token");
+        GrantType grant = new ResourceOwnerPasswordCredentialsGrant("http://localhost:7489/login");
         return new OAuthBuilder().name("OAuth2")
                 .grantTypes(Arrays.asList(grant))
                 .scopes(Arrays.asList(scopes()))
@@ -107,9 +103,15 @@ public class SwaggerConfig {
         return new ArrayList(
                 Collections.singleton(SecurityContext.builder()
                         .securityReferences(defaultAuth())
-//                        .forPaths(PathSelectors.regex("^(?!auth).*$"))
+                        // 过滤不需要token验证的接口（没实现好）
+                        .forPaths(PathSelectors.regex("^(?!login).*$"))
+//                        .forPaths(PathSelectors.regex("^(?!logout).*$"))
+//                        .forPaths(PathSelectors.regex("^(?!register).*$"))
+//                        .forPaths(PathSelectors.regex("^(?!SMS).*$"))
+//                        .forPaths(PathSelectors.regex("^(?!SMSCallBack).*$"))
+//                        .forPaths(PathSelectors.regex("^(?!verifyCode).*$"))
                         // 配置了所有请求都需要携带Token
-                        .forPaths(PathSelectors.any())
+//                        .forPaths(PathSelectors.any())
                         .build())
         );
     }

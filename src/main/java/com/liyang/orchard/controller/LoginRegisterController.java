@@ -21,6 +21,7 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.Md5Hash;
+import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.subject.Subject;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,6 +57,9 @@ public class LoginRegisterController {
 //        String salt = new SecureRandomNumberGenerator().nextBytes().toHex();
         // 调用MD5工具类进行加密
 //        user.setPassword(MD5Utils.inputPassToFormPass(user.getPassword()));
+        // 密码加密存储
+//        String password = new SimpleHash("SHA-512", user.getPassword(), "orchard").toString();
+
         //生成的密文
         String ciphertext = new Md5Hash(user.getPassword(),"orchard",2).toString();
         user.setPassword(ciphertext);
@@ -73,53 +77,61 @@ public class LoginRegisterController {
     @ApiOperation(value = "登录")
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public Result login(@RequestParam("phone") String phone, @RequestParam("password") String password){
-//        // 调用MD5工具类进行加密
-//        String inputEncryptionPassword=MD5Utils.inputPassToFormPass(password);
-//        // 调用自己编写的根据用户名查询方法
-//        User user=userService.findByPhone(phone);
-//        // 进行逻辑判断数据库是否有这个用户
-//        if(user==null){
-//            // 没有此用户,返回错误信息
-//            return ResultGenerator.genFailResult("您未注册账号,请先注册");
-//        }
-//        // 如果不为空,根据用户对象获取数据的密码
-//        String dbEncryptionPassword=user.getPassword();
-//        // 将数据的密码和前端传进来的密码进行匹配
-//        if(dbEncryptionPassword.equals(inputEncryptionPassword)) {
-//            //匹配成功输入SUCCESS
-//            return ResultGenerator.genSuccessResult();
-//        }
-//        else {
-//            // 匹配失败输出错误信息
-//            return ResultGenerator.genFailResult("密码或账户输入错误,请重新输入");
-//        }
+        // 调用自己编写的根据用户名查询方法
+        User user = userService.findByPhone(phone);
+        // 进行逻辑判断数据库是否有这个用户
+        if(user == null) {
+            // 没有此用户,返回错误信息
+            return ResultGenerator.genFailResult("您未注册账号,请先注册");
+        }
+        // 如果不为空,根据用户对象获取数据的密码
+        String dbEncryptionPassword = user.getPassword();
+        // 调用MD5工具类对密码进行2次加密
+        String inputEncryptionPassword = new Md5Hash(password,"orchard",2).toString();
+        // 将数据的密码和前端传进来的密码进行匹配
+        if(dbEncryptionPassword.equals(inputEncryptionPassword)) {
+            System.out.println("dbEncryptionPassword:" + dbEncryptionPassword);
+            System.out.println("password:" + password);
+            // 根据phone从数据库获取用户信息
+            List<SysUser> sysUser = userService.findUserAuthority(phone);
 
-        // 获取Subject对象
-        Subject currentUser = SecurityUtils.getSubject();
-        // 生成token
-        UsernamePasswordToken currentToken = new UsernamePasswordToken(phone, password);
-        try {
-            // shiro进行登录操作
-            currentUser.login(currentToken);
-        } catch (AuthenticationException e) {
-            return ResultGenerator.genFailResult("登录失败");
+            // 生成一个token
+            TokenUtils tokenUtils = new TokenUtils();
+
+            String token = null;
+            try {
+                token = tokenUtils.createToken(sysUser.get(0));
+            } catch (IndexOutOfBoundsException e) {
+                e.printStackTrace();
+                return ResultGenerator.genFailResult("用户权限错误");
+            }
+
+            // 生成一个LoginUser
+            LoginUser loginUser = new LoginUser();
+            loginUser.setUserId(sysUser.get(0).getUserId());
+            loginUser.setUserPhone(phone);
+            loginUser.setUserNikename(sysUser.get(0).getUsername());
+            loginUser.setUserToken(token);
+            //登录成功返回token
+            return ResultGenerator.genSuccessResult(loginUser);
+        }
+        else {
+            // 匹配失败输出错误信息
+            return ResultGenerator.genFailResult("密码或账户输入错误,请重新输入");
         }
 
-        // 根据phone从数据库获取用户信息
-        List<SysUser> sysUser = userService.findUserAuthority(phone);
+//         重新书写逻辑（不用shiro，自己写登陆逻辑）
+        // 获取Subject对象
+//        Subject currentUser = SecurityUtils.getSubject();
+        // 生成token
+//        UsernamePasswordToken currentToken = new UsernamePasswordToken(phone, password);
+//        try {
+//            // shiro进行登录操作
+//            currentUser.login(currentToken);
+//        } catch (AuthenticationException e) {
+//            return ResultGenerator.genFailResult("登录失败");
+//        }
 
-        // 生成一个token
-//        String token = TokenUtil.getToken(user.getUserId(), user.getName());
-        TokenUtils tokenUtils = new TokenUtils();
-        String token = tokenUtils.createToken(sysUser.get(0));
-
-        // 生成一个LoginUser
-        LoginUser loginUser = new LoginUser();
-        loginUser.setUserId(sysUser.get(0).getUserId());
-        loginUser.setUserPhone(phone);
-        loginUser.setUserNikename(sysUser.get(0).getUsername());
-        loginUser.setUserToken(token);
-        return ResultGenerator.genSuccessResult(loginUser);
     }
 
     @ApiOperation(value = "注销")
